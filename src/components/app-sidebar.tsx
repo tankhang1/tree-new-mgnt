@@ -98,6 +98,7 @@ const data = {
         { title: "Danh sách cây trồng", url: "crop/plants" },
         { title: "Nhóm cây trồng", url: "crop/plans" },
         { title: "Giống cây trồng", url: "crop/plant-variety" },
+        { title: "Hạt giống", url: "crop/seeds" },
         { title: "Nhật ký canh tác", url: "crop/logs" },
         { title: "Báo cáo năng suất & chất lượng", url: "crop/reports" },
       ],

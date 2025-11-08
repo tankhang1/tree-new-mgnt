@@ -85,6 +85,7 @@ export default function MainPage() {
     animals: "Động vật",
     plants: "Cây trồng",
     "plant-variety": "Giống cây trồng",
+    seeds: "Hạt giống",
   };
 
   // ✅ Lấy ra các phần của URL

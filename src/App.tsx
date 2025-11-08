@@ -69,6 +69,8 @@ import CropPlantsPage from "./pages/crop/plants/Plants";
 import AddPlantsPage from "./pages/crop/plants/AddPlants";
 import PlantVarietyPage from "./pages/crop/plant-variety/PlantVariety";
 import FarmingLogsPage from "./pages/crop/farming-logs/FarmingLogs";
+import SeedsPage from "./pages/crop/seeds/Seeds";
+import AddSeedsPage from "./pages/crop/seeds/AddSeeds";
 
 function App() {
   return (
@@ -143,6 +145,8 @@ function App() {
         <Route path="crop/plants" element={<CropPlantsPage />} />
         <Route path="crop/plants/add" element={<AddPlantsPage />} />
         <Route path="crop/plant-variety" element={<PlantVarietyPage />} />
+        <Route path="crop/seeds" element={<SeedsPage />} />
+        <Route path="crop/seeds/add" element={<AddSeedsPage />} />
         {/**Treatment */}
         <Route
           path="treatment/animals/add"
