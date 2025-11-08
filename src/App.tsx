@@ -29,7 +29,6 @@ import Mechanization from "./pages/production/Mechanization";
 
 // Crop
 import Fields from "./pages/crop/fields/Fields";
-import FarmingLogs from "./pages/crop/logs/FarmingLogs";
 
 // Integration
 import ErpFlow from "./pages/integration/ErpFlow";
@@ -69,6 +68,7 @@ import AddTechinicalPlansPage from "./pages/crop/techinical-plans/AddTechnicalPl
 import CropPlantsPage from "./pages/crop/plants/Plants";
 import AddPlantsPage from "./pages/crop/plants/AddPlants";
 import PlantVarietyPage from "./pages/crop/plant-variety/PlantVariety";
+import FarmingLogsPage from "./pages/crop/logs/FarmingLogs";
 
 function App() {
   return (
@@ -137,7 +137,7 @@ function App() {
         <Route path="crop/fields/map" element={<MapReviewPage />} />
         <Route path="crop/fields/detail" element={<FieldsDetailPage />} />
         <Route path="crop/fields/add" element={<AddFieldsPage />} />
-        <Route path="crop/logs" element={<FarmingLogs />} />
+        <Route path="crop/logs" element={<FarmingLogsPage />} />
         <Route path="crop/plans" element={<TechnicalPlansPage />} />
         <Route path="crop/plans/add" element={<AddTechinicalPlansPage />} />
         <Route path="crop/plants" element={<CropPlantsPage />} />
