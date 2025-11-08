@@ -68,7 +68,7 @@ import AddTechinicalPlansPage from "./pages/crop/techinical-plans/AddTechnicalPl
 import CropPlantsPage from "./pages/crop/plants/Plants";
 import AddPlantsPage from "./pages/crop/plants/AddPlants";
 import PlantVarietyPage from "./pages/crop/plant-variety/PlantVariety";
-import FarmingLogsPage from "./pages/crop/logs/FarmingLogs";
+import FarmingLogsPage from "./pages/crop/farming-logs/FarmingLogs";
 
 function App() {
   return (
