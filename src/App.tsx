@@ -71,6 +71,10 @@ import PlantVarietyPage from "./pages/crop/plant-variety/PlantVariety";
 import FarmingLogsPage from "./pages/crop/farming-logs/FarmingLogs";
 import SeedsPage from "./pages/crop/seeds/Seeds";
 import AddSeedsPage from "./pages/crop/seeds/AddSeeds";
+import SeasonGrowthPage from "./pages/season/growth/Growth";
+import AddGrowthPage from "./pages/season/growth/AddGrowth";
+import { SeasonCyclePage } from "./pages/season/cycle/Cycle";
+import AddCyclePage from "./pages/season/cycle/AddCycle";
 
 function App() {
   return (
@@ -164,6 +168,11 @@ function App() {
           path="integration/value-chain-report"
           element={<ValueChainReport />}
         />
+        {/**Season */}
+        <Route path="season/growth/add" element={<AddGrowthPage />} />
+        <Route path="season/growth" element={<SeasonGrowthPage />} />
+        <Route path="season/cycle" element={<SeasonCyclePage />} />
+        <Route path="season/cycle/add" element={<AddCyclePage />} />
 
         {/* Default fallback */}
         <Route

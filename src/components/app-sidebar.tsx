@@ -12,6 +12,7 @@ import {
   PieChart,
   Map,
   ShieldAlert,
+  Waves,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -103,6 +104,15 @@ const data = {
         { title: "Báo cáo năng suất & chất lượng", url: "crop/reports" },
       ],
     },
+    {
+      title: "Chu kỳ canh tác",
+      url: "season",
+      icon: Waves,
+      items: [
+        { title: "Mùa vụ", url: "season/growth" },
+        { title: "Chu kỳ sinh trưởng", url: "season/cycle" },
+      ],
+    },
     // {
     //   title: "Kho & Vận hành",
     //   url: "warehouse",
@@ -124,19 +134,19 @@ const data = {
     //     { title: "Theo dõi sản xuất", url: "feed-production/tracking" },
     //   ],
     // },
-    {
-      title: "Phân tích & Báo cáo",
-      url: "analytics",
-      icon: Settings2,
-      items: [
-        { title: "Hiệu quả sản xuất", url: "analytics/production-efficiency" },
-        { title: "Chi phí & lợi nhuận", url: "analytics/profitability" },
-        {
-          title: "Báo cáo môi trường & carbon",
-          url: "analytics/sustainability",
-        },
-      ],
-    },
+    // {
+    //   title: "Phân tích & Báo cáo",
+    //   url: "analytics",
+    //   icon: Settings2,
+    //   items: [
+    //     { title: "Hiệu quả sản xuất", url: "analytics/production-efficiency" },
+    //     { title: "Chi phí & lợi nhuận", url: "analytics/profitability" },
+    //     {
+    //       title: "Báo cáo môi trường & carbon",
+    //       url: "analytics/sustainability",
+    //     },
+    //   ],
+    // },
     {
       title: "Phác đồ điều trị",
       url: "treatment",
