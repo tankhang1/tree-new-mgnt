@@ -10,11 +10,6 @@ import Payments from "./pages/finance/payments/Payments";
 import Collections from "./pages/finance/collections/Collections";
 import DebtsReport from "./pages/finance/debts-report/DebtsReport";
 
-// Purchasing
-import OrdersPurchase from "./pages/purchasing/Orders";
-import AgriInputs from "./pages/purchasing/AgriInputs";
-import InvoicesPurchase from "./pages/purchasing/Invoices";
-
 // Sales
 import OrdersSales from "./pages/sales/Orders";
 import Tracking from "./pages/sales/Tracking";
@@ -32,8 +27,6 @@ import Mechanization from "./pages/production/Mechanization";
 
 // Livestock
 import Farms from "./pages/livestock/Farms";
-import VisitLogs from "./pages/livestock/VisitLogs";
-import CarePlans from "./pages/livestock/CarePlans";
 
 // Crop
 import Fields from "./pages/crop/Fields";
@@ -47,6 +40,24 @@ import AddPayablesPage from "./pages/finance/payables/AddPayables";
 import AddReceivablesPage from "./pages/finance/receivables/AddReceivables";
 import AddPaymentPage from "./pages/finance/payments/AddPayment";
 import AddCollectionPage from "./pages/finance/collections/AddCollection";
+
+// Materials
+import OrdersPage from "./pages/materials/orders/Orders";
+import AgriInputsPage from "./pages/materials/agri-inputs/AgriInputs";
+import InvoicesPage from "./pages/materials/invoices/Invoices";
+import SuppliersPage from "./pages/materials/suppliers/Suppliers";
+import AddOrdersPage from "./pages/materials/orders/AddOrders";
+import SuppliesPage from "./pages/materials/supplies/Supplies";
+import AddSuppliesPage from "./pages/materials/supplies/AddSupplies";
+import AddInvoicesPage from "./pages/materials/invoices/AddInvoices";
+import AddSupplierPage from "./pages/materials/suppliers/AddSupplier";
+import CarePlansPage from "./pages/livestock/care-plans/CarePlans";
+import AddCarePlansPage from "./pages/livestock/care-plans/AddCarePlans";
+import ScheduleCarePlansPage from "./pages/livestock/care-plans/ScheduleCarePlan";
+import AddScheduleCarePlansPage from "./pages/livestock/care-plans/AddScheduleCarePlans";
+import HealthPage from "./pages/livestock/health/Health";
+import VisitLogsPage from "./pages/livestock/VisitLogs";
+import ReportPage from "./pages/livestock/report/Report";
 
 function App() {
   return (
@@ -66,11 +77,16 @@ function App() {
         <Route path="finance/collections/add" element={<AddCollectionPage />} />
         <Route path="finance/collections" element={<Collections />} />
         <Route path="finance/debts-report" element={<DebtsReport />} />
-
         {/* Purchasing */}
-        <Route path="purchasing/orders" element={<OrdersPurchase />} />
-        <Route path="purchasing/agri-inputs" element={<AgriInputs />} />
-        <Route path="purchasing/invoices" element={<InvoicesPurchase />} />
+        <Route path="materials/supplies/add" element={<AddSuppliesPage />} />
+        <Route path="materials/supplies" element={<SuppliesPage />} />
+        <Route path="materials/orders" element={<OrdersPage />} />
+        <Route path="materials/orders/add" element={<AddOrdersPage />} />
+        <Route path="materials/agri-inputs" element={<AgriInputsPage />} />
+        <Route path="materials/invoices" element={<InvoicesPage />} />
+        <Route path="materials/invoices/add" element={<AddInvoicesPage />} />
+        <Route path="materials/suppliers/add" element={<AddSupplierPage />} />
+        <Route path="materials/suppliers" element={<SuppliersPage />} />
 
         {/* Sales */}
         <Route path="sales/orders" element={<OrdersSales />} />
@@ -91,10 +107,19 @@ function App() {
         <Route path="production/mechanization" element={<Mechanization />} />
 
         {/* Livestock */}
-        <Route path="livestock/farms" element={<Farms />} />
-        <Route path="livestock/visit-logs" element={<VisitLogs />} />
-        <Route path="livestock/care-plans" element={<CarePlans />} />
-
+        <Route path="livestock/reports" element={<ReportPage />} />
+        <Route path="livestock/visit-logs" element={<VisitLogsPage />} />
+        <Route path="livestock/health" element={<HealthPage />} />
+        <Route path="livestock/plans" element={<CarePlansPage />} />
+        <Route path="livestock/plans/add" element={<AddCarePlansPage />} />
+        <Route
+          path="livestock/plans/schedule"
+          element={<ScheduleCarePlansPage />}
+        />
+        <Route
+          path="livestock/plans/schedule/add"
+          element={<AddScheduleCarePlansPage />}
+        />
         {/* Crop */}
         <Route path="crop/fields" element={<Fields />} />
         <Route path="crop/farming-logs" element={<FarmingLogs />} />

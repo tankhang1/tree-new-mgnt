@@ -80,6 +80,7 @@ export default function MainPage() {
     "livestock-chain": "Chuỗi sản xuất & chăn nuôi hợp nhất",
     "crop-chain": "Chuỗi canh tác & chế biến nông sản",
     add: "Thêm mới",
+    schedule: "Kế hoạch",
   };
 
   // ✅ Lấy ra các phần của URL

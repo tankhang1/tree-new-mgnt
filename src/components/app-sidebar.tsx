@@ -67,6 +67,7 @@ const data = {
       url: "materials",
       icon: SquareTerminal,
       items: [
+        { title: "Danh sách vật tư nông nghiệp", url: "materials/supplies" },
         { title: "Đơn mua vật tư nông nghiệp", url: "materials/orders" },
         {
           title: "Kiểm soát phân bón, thuốc BVTV",
@@ -83,7 +84,7 @@ const data = {
       items: [
         { title: "Kế hoạch nuôi & phối giống", url: "livestock/plans" },
         { title: "Theo dõi tăng trưởng & sức khỏe", url: "livestock/health" },
-        { title: "Nhật ký chăn nuôi", url: "livestock/logs" },
+        { title: "Nhật ký chăn nuôi", url: "livestock/visit-logs" },
         { title: "Báo cáo sản lượng & chi phí", url: "livestock/reports" },
       ],
     },

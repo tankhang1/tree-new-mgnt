@@ -6,6 +6,7 @@ export type BankAccount = {
   branch: string;
   note?: string;
   avatar: string;
+  branches: string[];
 };
 export const bankAccounts: BankAccount[] = [
   {
@@ -17,6 +18,16 @@ export const bankAccounts: BankAccount[] = [
     note: "Tài khoản giao dịch chính",
     avatar:
       "https://upload.wikimedia.org/wikipedia/commons/7/7c/Techcombank_logo.png",
+    branches: [
+      "CN Sài Gòn",
+      "CN Trần Duy Hưng (Hà Nội)",
+      "CN Lê Văn Sỹ (TP.HCM)",
+      "CN Đà Nẵng",
+      "CN Cần Thơ",
+      "CN Hải Phòng",
+      "CN Bình Dương",
+      "CN Long An",
+    ],
   },
   {
     id: "b2",
@@ -27,5 +38,15 @@ export const bankAccounts: BankAccount[] = [
     note: "Dùng cho thanh toán nội bộ",
     avatar:
       "https://cdn.haitrieu.com/wp-content/uploads/2022/02/Logo-Vietcombank.png",
+    branches: [
+      "CN Hà Nội",
+      "CN TP.HCM",
+      "CN Đà Nẵng",
+      "CN Cần Thơ",
+      "CN Hải Phòng",
+      "CN Bình Dương",
+      "CN Biên Hòa",
+      "CN Quảng Ninh",
+    ],
   },
 ];

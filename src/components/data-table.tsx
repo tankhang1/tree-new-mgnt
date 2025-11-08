@@ -23,7 +23,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { DataTableToolbar } from "./data-table-toolbar";
 import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
@@ -67,78 +66,82 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4 animate-in fade-in duration-300">
-      <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
-        <Table className="w-full border-collapse">
-          <TableHeader className="bg-muted/30 sticky top-0 z-10 backdrop-blur-sm">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    className={cn(
-                      "font-medium text-foreground/90",
-                      header.column.getCanSort() &&
-                        "cursor-pointer select-none transition-colors hover:text-primary"
-                    )}
-                    onClick={
-                      header.column.getCanSort()
-                        ? header.column.getToggleSortingHandler()
-                        : undefined
-                    }
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    {header.column.getCanSort() && (
-                      <span className="ml-1 text-xs text-muted-foreground">
-                        {{
-                          asc: "↑",
-                          desc: "↓",
-                        }[header.column.getIsSorted() as string] ?? ""}
-                      </span>
-                    )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() ? "selected" : undefined}
-                  className="transition-colors hover:bg-muted/40"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="py-2 text-sm text-foreground/90"
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+      {/* wrapper cho phép scroll ngang */}
+      <div className="overflow-x-auto rounded-lg border bg-card shadow-sm">
+        {/* min-width để bảng rộng hơn container => xuất hiện scroll */}
+        <div className="min-w-[960px]">
+          <Table className="border-collapse">
+            <TableHeader className="sticky top-0 z-10 bg-muted/30 backdrop-blur-sm">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead
+                      key={header.id}
+                      className={cn(
+                        "whitespace-nowrap px-3 py-2 text-xs font-medium text-foreground/90",
+                        header.column.getCanSort() &&
+                          "cursor-pointer select-none transition-colors hover:text-primary"
                       )}
-                    </TableCell>
+                      onClick={
+                        header.column.getCanSort()
+                          ? header.column.getToggleSortingHandler()
+                          : undefined
+                      }
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      {header.column.getCanSort() && (
+                        <span className="ml-1 text-[10px] text-muted-foreground">
+                          {{
+                            asc: "↑",
+                            desc: "↓",
+                          }[header.column.getIsSorted() as string] ?? ""}
+                        </span>
+                      )}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center text-sm text-muted-foreground"
-                >
-                  Không có dữ liệu.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() ? "selected" : undefined}
+                    className="transition-colors hover:bg-muted/40"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className="whitespace-nowrap px-3 py-2 text-sm text-foreground/90"
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center text-sm text-muted-foreground"
+                  >
+                    Không có dữ liệu.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       <div className="flex flex-col items-center justify-between gap-3 text-sm text-muted-foreground sm:flex-row">
