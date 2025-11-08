@@ -82,7 +82,7 @@ export default function VarietyCreateDialog({}: {}) {
           </p>
         </DialogHeader>
 
-        <div className="space-y-4 text-xs">
+        <div className="space-y-4 text-xs max-h-96 overflow-y-auto">
           {/* ── Thông tin cơ bản ─────────────────────── */}
           <div className="space-y-2 rounded-md border bg-muted/20 p-3">
             <p className="text-[11px] font-semibold text-muted-foreground">
