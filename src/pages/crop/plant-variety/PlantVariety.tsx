@@ -240,11 +240,11 @@ export default function PlantVarietyPage() {
       result = result.filter((v) => {
         const haystack =
           v.code +
-            v.name +
-            v.cropName +
-            v.seedSupplier +
-            v.growthCycle +
-            v.note ?? "";
+          v.name +
+          v.cropName +
+          v.seedSupplier +
+          v.growthCycle +
+          v.note;
         return haystack.toLowerCase().includes(s);
       });
     }
