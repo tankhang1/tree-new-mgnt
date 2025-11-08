@@ -383,7 +383,7 @@ export default function OrdersPage() {
                 setStatusFilter(v as "all" | PurchaseOrderStatus)
               }
             >
-              <SelectTrigger className="h-9">
+              <SelectTrigger className="h-9 w-full">
                 <SelectValue placeholder="Chọn trạng thái" />
               </SelectTrigger>
               <SelectContent>

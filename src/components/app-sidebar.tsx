@@ -68,14 +68,14 @@ const data = {
       url: "materials",
       icon: SquareTerminal,
       items: [
-        { title: "Danh sách vật tư nông nghiệp", url: "materials/supplies" },
+        { title: "Vật tư nông nghiệp", url: "materials/supplies" },
         { title: "Đơn mua vật tư nông nghiệp", url: "materials/orders" },
         {
-          title: "Kiểm soát phân bón, thuốc BVTV",
+          title: "Phân bón, thuốc BVTV",
           url: "materials/agri-inputs",
         },
         { title: "Hóa đơn & chứng từ nhập hàng", url: "materials/invoices" },
-        { title: "Theo dõi nhà cung cấp", url: "materials/suppliers" },
+        { title: "Nhà cung cấp", url: "materials/suppliers" },
       ],
     },
     {
@@ -95,7 +95,8 @@ const data = {
       icon: Map,
       items: [
         { title: "Danh mục vườn cây & lô đất", url: "crop/fields" },
-        { title: "Kế hoạch gieo trồng & chăm sóc", url: "crop/plans" },
+        { title: "Danh sách cây trồng", url: "crop/plants" },
+        { title: "Nhóm cây trồng", url: "crop/plans" },
         { title: "Nhật ký canh tác", url: "crop/logs" },
         { title: "Báo cáo năng suất & chất lượng", url: "crop/reports" },
       ],

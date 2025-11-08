@@ -512,7 +512,7 @@ export default function SuppliesPage() {
               value={categoryFilter}
               onValueChange={(v) => setCategoryFilter(v as any)}
             >
-              <SelectTrigger className="h-9">
+              <SelectTrigger className="h-9 w-full">
                 <SelectValue placeholder="Chọn nhóm" />
               </SelectTrigger>
               <SelectContent>
@@ -532,7 +532,7 @@ export default function SuppliesPage() {
               value={statusFilter}
               onValueChange={(v) => setStatusFilter(v as any)}
             >
-              <SelectTrigger className="h-9">
+              <SelectTrigger className="h-9 w-full">
                 <SelectValue placeholder="Chọn trạng thái" />
               </SelectTrigger>
               <SelectContent>
@@ -550,7 +550,7 @@ export default function SuppliesPage() {
               value={warehouseFilter}
               onValueChange={(v) => setWarehouseFilter(v)}
             >
-              <SelectTrigger className="h-9">
+              <SelectTrigger className="h-9 w-fulls">
                 <SelectValue placeholder="Chọn kho" />
               </SelectTrigger>
               <SelectContent>

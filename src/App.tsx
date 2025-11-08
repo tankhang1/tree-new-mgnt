@@ -26,12 +26,10 @@ import FeedIntegration from "./pages/production/FeedIntegration";
 import Mechanization from "./pages/production/Mechanization";
 
 // Livestock
-import Farms from "./pages/livestock/Farms";
 
 // Crop
 import Fields from "./pages/crop/fields/Fields";
 import FarmingLogs from "./pages/crop/logs/FarmingLogs";
-import TechnicalPlans from "./pages/crop/TechnicalPlans";
 
 // Integration
 import ErpFlow from "./pages/integration/ErpFlow";
@@ -65,6 +63,11 @@ import TreatmentAnimalPage from "./pages/treatment/animal/Animal";
 import AddTreatmentAnimalPage from "./pages/treatment/animal/AddTreatmentAnimal";
 import TreatmentPlantPage from "./pages/treatment/plant/Plant";
 import AddTreatmentPlantPage from "./pages/treatment/plant/AddTreatmentPlant";
+import ReportsPage from "./pages/crop/reports/Reports";
+import TechnicalPlansPage from "./pages/crop/techinical-plans/TechnicalPlans";
+import AddTechinicalPlansPage from "./pages/crop/techinical-plans/AddTechnicalPlans";
+import CropPlantsPage from "./pages/crop/plants/Plants";
+import AddPlantsPage from "./pages/crop/plants/AddPlants";
 
 function App() {
   return (
@@ -128,12 +131,16 @@ function App() {
           element={<AddScheduleCarePlansPage />}
         />
         {/* Crop */}
+        <Route path="crop/reports" element={<ReportsPage />} />
         <Route path="crop/fields" element={<Fields />} />
         <Route path="crop/fields/map" element={<MapReviewPage />} />
         <Route path="crop/fields/detail" element={<FieldsDetailPage />} />
         <Route path="crop/fields/add" element={<AddFieldsPage />} />
         <Route path="crop/logs" element={<FarmingLogs />} />
-        <Route path="crop/technical-plans" element={<TechnicalPlans />} />
+        <Route path="crop/plans" element={<TechnicalPlansPage />} />
+        <Route path="crop/plans/add" element={<AddTechinicalPlansPage />} />
+        <Route path="crop/plants" element={<CropPlantsPage />} />
+        <Route path="crop/plants/add" element={<AddPlantsPage />} />
         {/**Treatment */}
         <Route
           path="treatment/animals/add"

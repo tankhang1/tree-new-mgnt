@@ -349,7 +349,7 @@ export default function SuppliersPage() {
       {/* HEADER */}
       <header className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-card px-4 py-3">
         <div className="space-y-1">
-          <h1 className="text-lg font-semibold">Theo dõi nhà cung cấp</h1>
+          <h1 className="text-lg font-semibold">Danh sách nhà cung cấp</h1>
           <p className="text-xs text-muted-foreground">
             Quản lý lịch sử mua hàng, công nợ và chất lượng giao hàng của các
             nhà cung cấp.

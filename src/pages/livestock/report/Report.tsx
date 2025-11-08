@@ -477,31 +477,48 @@ export default function ReportPage() {
         </CardContent>
       </Card>
 
-      {/* CHARTS ROW 1: Doanh thu & lợi nhuận theo tháng + Lợi nhuận theo trại */}
+      {/* ==== HÀNG 1: DOANH THU – CHI PHÍ – LỢI NHUẬN ==== */}
       <div className="grid gap-4 lg:grid-cols-2">
-        {/* Line doanh thu / chi phí / lợi nhuận */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-semibold text-muted-foreground">
+        {/* Linechart: Doanh thu – Chi phí – Lợi nhuận */}
+        <Card className="shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2 text-muted-foreground">
               Doanh thu – Chi phí – Lợi nhuận theo tháng
             </CardTitle>
           </CardHeader>
           <CardContent className="h-[260px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={monthlyAgg}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip
-                  formatter={(v: number) => v.toLocaleString("vi-VN") + " ₫"}
+                <CartesianGrid strokeDasharray="3 3" opacity={0.4} />
+                <XAxis
+                  dataKey="month"
+                  tick={{ fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
                 />
-                <Legend />
+                <YAxis
+                  tick={{ fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={(v) =>
+                    (v / 1_000_000).toFixed(0).toString() + "tr"
+                  }
+                />
+                <Tooltip
+                  formatter={(v: number, n) => [
+                    `${v.toLocaleString("vi-VN")} ₫`,
+                    n,
+                  ]}
+                />
+                <Legend wrapperStyle={{ fontSize: 11 }} iconType="circle" />
                 <Line
                   type="monotone"
                   dataKey="revenue"
                   name="Doanh thu"
                   stroke="#22c55e"
                   strokeWidth={2}
+                  dot={{ r: 3 }}
+                  activeDot={{ r: 5 }}
                 />
                 <Line
                   type="monotone"
@@ -509,6 +526,9 @@ export default function ReportPage() {
                   name="Chi phí"
                   stroke="#ef4444"
                   strokeWidth={2}
+                  strokeDasharray="4 2"
+                  dot={{ r: 3 }}
+                  activeDot={{ r: 5 }}
                 />
                 <Line
                   type="monotone"
@@ -516,15 +536,17 @@ export default function ReportPage() {
                   name="Lợi nhuận"
                   stroke="#3b82f6"
                   strokeWidth={2}
+                  dot={{ r: 3 }}
+                  activeDot={{ r: 5 }}
                 />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        {/* Bar lợi nhuận + ROI theo trại */}
-        <Card>
-          <CardHeader>
+        {/* Barchart: Lợi nhuận & ROI theo trại */}
+        <Card className="shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
+          <CardHeader className="pb-2">
             <CardTitle className="text-sm font-semibold text-muted-foreground">
               Lợi nhuận & ROI theo từng trại
             </CardTitle>
@@ -532,33 +554,53 @@ export default function ReportPage() {
           <CardContent className="h-[260px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={farmAgg} margin={{ left: 24, right: 16 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="farm" />
-                <YAxis yAxisId="left" />
-                <YAxis yAxisId="right" orientation="right" />
-                <Tooltip
-                  formatter={(value: any, name, props) => {
-                    if (name === "ROI") {
-                      return [`${value}%`, "ROI"];
-                    }
-                    return [Number(value).toLocaleString("vi-VN") + " ₫", name];
-                  }}
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  opacity={0.4}
                 />
-                <Legend />
+                <XAxis
+                  dataKey="farm"
+                  tick={{ fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  yAxisId="left"
+                  tick={{ fontSize: 11 }}
+                  tickFormatter={(v) =>
+                    (v / 1_000_000).toFixed(0).toString() + "tr"
+                  }
+                />
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  tick={{ fontSize: 11 }}
+                  domain={[0, 200]}
+                />
+                <Tooltip
+                  formatter={(value: any, name) =>
+                    name === "ROI"
+                      ? [`${value}%`, "ROI"]
+                      : [`${Number(value).toLocaleString("vi-VN")} ₫`, name]
+                  }
+                />
+                <Legend wrapperStyle={{ fontSize: 11 }} iconType="circle" />
                 <Bar
                   yAxisId="left"
                   dataKey="profit"
                   name="Lợi nhuận"
                   fill="#3b82f6"
-                  radius={[4, 4, 0, 0]}
+                  radius={[6, 6, 0, 0]}
                 />
                 <Line
                   yAxisId="right"
                   type="monotone"
                   dataKey="roi"
-                  name="ROI"
+                  name="ROI (%)"
                   stroke="#f97316"
                   strokeWidth={2}
+                  dot={{ r: 3 }}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -566,11 +608,11 @@ export default function ReportPage() {
         </Card>
       </div>
 
-      {/* CHARTS ROW 2: Cơ cấu chi phí + Phân bố ROI */}
+      {/* ==== HÀNG 2: CƠ CẤU CHI PHÍ – PHÂN BỐ ROI ==== */}
       <div className="grid gap-4 lg:grid-cols-2">
-        {/* Pie cơ cấu chi phí */}
-        <Card>
-          <CardHeader>
+        {/* Piechart: Cơ cấu chi phí */}
+        <Card className="shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
+          <CardHeader className="pb-2">
             <CardTitle className="text-sm font-semibold text-muted-foreground">
               Cơ cấu chi phí theo danh mục
             </CardTitle>
@@ -582,14 +624,24 @@ export default function ReportPage() {
                   <Tooltip
                     formatter={(v: number) => v.toLocaleString("vi-VN") + " ₫"}
                   />
-                  <Legend />
+                  <Legend
+                    verticalAlign="bottom"
+                    align="center"
+                    wrapperStyle={{ fontSize: 11 }}
+                    iconType="circle"
+                  />
                   <Pie
                     data={categoryCost}
                     dataKey="cost"
                     nameKey="category"
                     outerRadius={90}
-                    innerRadius={50}
+                    innerRadius={45}
                     paddingAngle={3}
+                    label={(props) =>
+                      `${props.name}: ${((props.percent || 0) * 100).toFixed(
+                        0
+                      )}%`
+                    }
                   >
                     {categoryCost.map((entry, idx) => (
                       <Cell
@@ -601,6 +653,8 @@ export default function ReportPage() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
+
+            {/* Bảng chi tiết */}
             <div className="w-44 space-y-2 text-xs">
               {categoryCost.map((c, idx) => (
                 <div
@@ -609,7 +663,7 @@ export default function ReportPage() {
                 >
                   <div className="flex items-center gap-2">
                     <span
-                      className="h-2 w-2 rounded-full"
+                      className="h-2.5 w-2.5 rounded-full"
                       style={{
                         backgroundColor: pieColors[idx % pieColors.length],
                       }}
@@ -625,21 +679,31 @@ export default function ReportPage() {
           </CardContent>
         </Card>
 
-        {/* Bar phân bố ROI (số trại / số dòng theo bucket) */}
-        <Card>
-          <CardHeader>
+        {/* Barchart: Phân bố ROI */}
+        <Card className="shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
+          <CardHeader className="pb-2">
             <CardTitle className="text-sm font-semibold text-muted-foreground">
               Phân bố ROI theo mức hiệu quả
             </CardTitle>
           </CardHeader>
           <CardContent className="h-[260px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={roiBuckets}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="label" />
-                <YAxis />
+              <BarChart data={roiBuckets} barCategoryGap={24}>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  opacity={0.4}
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="label"
+                  tick={{ fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip formatter={(v: number) => `${v} bản ghi`} />
-                <Bar dataKey="count" name="Số bản ghi">
+                <Legend wrapperStyle={{ fontSize: 11 }} iconType="circle" />
+                <Bar dataKey="count" name="Số bản ghi" radius={[6, 6, 0, 0]}>
                   {roiBuckets.map((b, idx) => (
                     <Cell
                       key={b.label}

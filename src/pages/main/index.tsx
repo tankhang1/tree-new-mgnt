@@ -33,11 +33,11 @@ export default function MainPage() {
     orders: "Đơn mua vật tư nông nghiệp",
     "agri-inputs": "Phân bón & thuốc BVTV",
     invoices: "Hóa đơn & chứng từ nhập hàng",
-    suppliers: "Theo dõi nhà cung cấp",
+    suppliers: "Nhà cung cấp",
 
     // --- Sản xuất - Chăn nuôi ---
     livestock: "Sản xuất - Chăn nuôi",
-    plans: "Kế hoạch nuôi & phối giống",
+    plans: "Kế hoạch",
     health: "Theo dõi tăng trưởng & sức khỏe",
     logs: "Nhật ký chăn nuôi",
     reports: "Báo cáo sản lượng & chi phí",
