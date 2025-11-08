@@ -170,6 +170,9 @@ const data: Collection[] = [
 export default function CollectionsPage() {
   const [status, setStatus] = useState("all");
   const navigate = useNavigate();
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+
   return (
     <div className="flex flex-1 flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -278,6 +281,22 @@ export default function CollectionsPage() {
             <SelectItem value="refunded">Hoàn tiền</SelectItem>
           </SelectContent>
         </Select>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs text-muted-foreground">Từ ngày</span>
+          <Input
+            type="date"
+            className="h-9 w-[150px]"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+          />
+          <span className="text-xs text-muted-foreground">Đến ngày</span>
+          <Input
+            type="date"
+            className="h-9 w-[150px]"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+          />
+        </div>
       </div>
 
       <DataTable columns={columns} data={data} filterColumn="customer" />
