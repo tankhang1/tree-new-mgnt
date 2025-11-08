@@ -499,7 +499,7 @@ function Step1Region(props: {
 
           <div className="grid gap-3 md:grid-cols-2">
             <div>
-              <p className="text-xs text-muted-foreground">Loại cây chính *</p>
+              <p className="text-xs text-muted-foreground">Nhóm cây trồng *</p>
               <Select
                 value={cropMain}
                 onValueChange={(v: CropType) => setCropMain(v)}
@@ -511,13 +511,13 @@ function Step1Region(props: {
                   <SelectItem value="corn">
                     <div className="flex items-center gap-2">
                       <Leaf className="h-3 w-3 text-amber-600" />
-                      <span>Bắp (Ngô)</span>
+                      <span>Nhóm bắp – đậu nành luân canh</span>
                     </div>
                   </SelectItem>
                   <SelectItem value="soybean">
                     <div className="flex items-center gap-2">
                       <Sprout className="h-3 w-3 text-emerald-600" />
-                      <span>Đậu nành</span>
+                      <span>Nhóm lúa chất lượng cao</span>
                     </div>
                   </SelectItem>
                 </SelectContent>
