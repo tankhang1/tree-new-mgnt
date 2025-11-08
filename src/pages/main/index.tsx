@@ -83,6 +83,7 @@ export default function MainPage() {
     schedule: "Kế hoạch",
     treatment: "Phát đồ điều trị",
     animals: "Động vật",
+    plants: "Cây trồng",
   };
 
   // ✅ Lấy ra các phần của URL

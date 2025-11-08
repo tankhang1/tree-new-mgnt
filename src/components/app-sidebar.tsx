@@ -100,27 +100,27 @@ const data = {
         { title: "Báo cáo năng suất & chất lượng", url: "crop/reports" },
       ],
     },
-    {
-      title: "Kho & Vận hành",
-      url: "warehouse",
-      icon: Frame,
-      items: [
-        { title: "Quản lý tồn kho vật tư", url: "warehouse/material-stock" },
-        { title: "Kho thành phẩm & nông sản", url: "warehouse/finished-goods" },
-        { title: "Kiểm kê & cảnh báo tồn kho", url: "warehouse/stock-control" },
-        { title: "Vận chuyển nội bộ", url: "warehouse/transfer" },
-      ],
-    },
-    {
-      title: "Sản xuất thức ăn chăn nuôi",
-      url: "feed-production",
-      icon: Bot,
-      items: [
-        { title: "Kế hoạch phối trộn", url: "feed-production/formulas" },
-        { title: "Nguyên liệu đầu vào", url: "feed-production/materials" },
-        { title: "Theo dõi sản xuất", url: "feed-production/tracking" },
-      ],
-    },
+    // {
+    //   title: "Kho & Vận hành",
+    //   url: "warehouse",
+    //   icon: Frame,
+    //   items: [
+    //     { title: "Quản lý tồn kho vật tư", url: "warehouse/material-stock" },
+    //     { title: "Kho thành phẩm & nông sản", url: "warehouse/finished-goods" },
+    //     { title: "Kiểm kê & cảnh báo tồn kho", url: "warehouse/stock-control" },
+    //     { title: "Vận chuyển nội bộ", url: "warehouse/transfer" },
+    //   ],
+    // },
+    // {
+    //   title: "Sản xuất thức ăn chăn nuôi",
+    //   url: "feed-production",
+    //   icon: Bot,
+    //   items: [
+    //     { title: "Kế hoạch phối trộn", url: "feed-production/formulas" },
+    //     { title: "Nguyên liệu đầu vào", url: "feed-production/materials" },
+    //     { title: "Theo dõi sản xuất", url: "feed-production/tracking" },
+    //   ],
+    // },
     {
       title: "Phân tích & Báo cáo",
       url: "analytics",
@@ -146,19 +146,19 @@ const data = {
         { title: "Động vật / Gia súc", url: "treatment/animals" },
       ],
     },
-    {
-      title: "Hệ thống & Tích hợp",
-      url: "system",
-      icon: Command,
-      items: [
-        {
-          title: "Liên kết kho - tài chính - sản xuất",
-          url: "system/integration",
-        },
-        { title: "Quản lý người dùng & phân quyền", url: "system/users" },
-        { title: "Cấu hình quy trình ERP", url: "system/workflows" },
-      ],
-    },
+    // {
+    //   title: "Hệ thống & Tích hợp",
+    //   url: "system",
+    //   icon: Command,
+    //   items: [
+    //     {
+    //       title: "Liên kết kho - tài chính - sản xuất",
+    //       url: "system/integration",
+    //     },
+    //     { title: "Quản lý người dùng & phân quyền", url: "system/users" },
+    //     { title: "Cấu hình quy trình ERP", url: "system/workflows" },
+    //   ],
+    // },
   ],
   projects: [],
 };

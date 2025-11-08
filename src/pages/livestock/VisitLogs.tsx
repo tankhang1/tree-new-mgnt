@@ -3,8 +3,10 @@
 import { useMemo, useState } from "react";
 import {
   PawPrint,
+  FilePlus2,
   FileDown,
   CalendarDays,
+  Beef,
   Stethoscope,
   Wheat,
   Droplets,
@@ -24,21 +26,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import type { ColumnDef } from "@tanstack/react-table";
 import MilestoneTimeline from "./MilestoneTimeline";
+
 // ================== TYPES & MOCK DATA ==================
 
-type LogType =
-  | "feeding"
-  | "health"
-  | "breeding"
-  | "environment"
-  | "other"
-  | "production"
-  | "treatment"
-  | "growth"
-  | "movement";
+type LogType = string;
 
-type LivestockLog = {
+export type LivestockLog = {
   id: string;
   date: string; // ISO
   time: string; // HH:mm
@@ -65,7 +61,7 @@ const logs: LivestockLog[] = [
     logType: "feeding",
     title: "Cho ăn sáng",
     detail:
-      "Ăn khẩu phần cỏ tươi + cám hỗn hợp, lượng ăn ~95% khẩu phần, uống nước bình thường.",
+      "Ăn khẩu phần cỏ tươi + cám hỗn hợp, lượng ăn 95% khẩu phần, uống nước bình thường.",
     recorder: "Nguyễn Văn A",
     status: "normal",
   },
@@ -129,356 +125,56 @@ const logs: LivestockLog[] = [
     recorder: "Nguyễn Văn A",
     status: "critical",
   },
-  // ===== Thêm nhiều bản ghi khác =====
-  {
-    id: "6",
-    date: "2025-11-06",
-    time: "16:10",
-    animalTag: "HF-001",
-    animalName: "Bò cái HF 001",
-    group: "Đàn bò sữa A1",
-    farm: "Trại bò sữa A1",
-    logType: "production",
-    title: "Ghi nhận sản lượng sữa chiều",
-    detail:
-      "Vắt được 18.5 lít, sữa đều, màu bình thường. Giảm nhẹ 0.5 lít so với hôm trước.",
-    recorder: "Nguyễn Văn A",
-    status: "normal",
-  },
-  {
-    id: "7",
-    date: "2025-11-06",
-    time: "20:05",
-    animalTag: "HF-012",
-    animalName: "Bò cái HF 012",
-    group: "Đàn bò sữa A2",
-    farm: "Trại bò sữa A1",
-    logType: "treatment",
-    title: "Tiêm hạ sốt & kháng sinh",
-    detail:
-      "Tiêm hạ sốt theo phác đồ thú y, kết hợp kháng sinh 3 ngày, theo dõi nhiệt độ sáng/chiều.",
-    recorder: "Bác sĩ thú y Phạm Văn D",
-    status: "warning",
-  },
-  {
-    id: "8",
-    date: "2025-11-05",
-    time: "06:20",
-    animalTag: "HB-078",
-    animalName: "Bò cái hậu bị 078",
-    group: "Đàn bò hậu bị",
-    farm: "Trại giống B2",
-    logType: "feeding",
-    title: "Khẩu phần sáng",
-    detail:
-      "Bò ăn hết 100% khẩu phần cỏ voi + rơm khô, uống nước nhiều, phân bình thường.",
-    recorder: "Nguyễn Thị E",
-    status: "normal",
-  },
-  {
-    id: "9",
-    date: "2025-11-05",
-    time: "19:00",
-    animalTag: "MT-045",
-    animalName: "Bò thịt lai Sind 045",
-    group: "Đàn bò thịt B1",
-    farm: "Trại bò thịt C1",
-    logType: "growth",
-    title: "Cân khối lượng định kỳ",
-    detail:
-      "Khối lượng đạt 345 kg, tăng 12 kg so với kỳ trước (2 tuần). Tốc độ tăng trưởng đạt yêu cầu.",
-    recorder: "Lê Văn C",
-    status: "normal",
-  },
-  {
-    id: "10",
-    date: "2025-11-04",
-    time: "05:50",
-    animalTag: "HF-020",
-    animalName: "Bò cái HF 020",
-    group: "Đàn bò sữa A3",
-    farm: "Trại bò sữa A1",
-    logType: "feeding",
-    title: "Ăn kém buổi sáng",
-    detail:
-      "Chỉ ăn khoảng 60% khẩu phần, đứng riêng, ít giao tiếp. Cần theo dõi thêm.",
-    recorder: "Nguyễn Văn A",
-    status: "warning",
-  },
-  {
-    id: "11",
-    date: "2025-11-04",
-    time: "14:10",
-    animalTag: "HF-020",
-    animalName: "Bò cái HF 020",
-    group: "Đàn bò sữa A3",
-    farm: "Trại bò sữa A1",
-    logType: "health",
-    title: "Khám sơ bộ bò ăn kém",
-    detail:
-      "Nhiệt độ 38.7°C, không sốt, rumen hoạt động chậm, niêm mạc nhợt. Nghi rối loạn tiêu hoá nhẹ.",
-    recorder: "Bùi Thị F",
-    status: "warning",
-  },
-  {
-    id: "12",
-    date: "2025-11-03",
-    time: "07:00",
-    animalTag: "HF-001",
-    animalName: "Bò cái HF 001",
-    group: "Đàn bò sữa A1",
-    farm: "Trại bò sữa A1",
-    logType: "production",
-    title: "Sản lượng sữa sáng",
-    detail:
-      "Vắt được 19 lít, chất lượng sữa tốt, không có bất thường về màu/mùi.",
-    recorder: "Nguyễn Văn A",
-    status: "normal",
-  },
-  {
-    id: "13",
-    date: "2025-11-03",
-    time: "09:30",
-    animalTag: "HF-001",
-    animalName: "Bò cái HF 001",
-    group: "Đàn bò sữa A1",
-    farm: "Trại bò sữa A1",
-    logType: "treatment",
-    title: "Điều trị nghi viêm vú",
-    detail:
-      "Vệ sinh bầu vú, vắt bỏ sữa vú bệnh, dùng kháng sinh bơm vú theo hướng dẫn. Ghi rõ đánh dấu chuồng.",
-    recorder: "Bác sĩ thú y Phạm Văn D",
-    status: "critical",
-  },
-  {
-    id: "14",
-    date: "2025-11-02",
-    time: "16:30",
-    animalTag: "HB-078",
-    animalName: "Bò cái hậu bị 078",
-    group: "Đàn bò hậu bị",
-    farm: "Trại giống B2",
-    logType: "growth",
-    title: "Đánh giá tăng trưởng hậu bị",
-    detail:
-      "Thân hình phát triển đều, điểm thể trạng BCS 3.0/5, phù hợp giai đoạn chuẩn bị phối giống.",
-    recorder: "Lê Văn C",
-    status: "normal",
-  },
-  {
-    id: "15",
-    date: "2025-11-02",
-    time: "11:15",
-    animalTag: "MT-045",
-    animalName: "Bò thịt lai Sind 045",
-    group: "Đàn bò thịt B1",
-    farm: "Trại bò thịt C1",
-    logType: "feeding",
-    title: "Điều chỉnh khẩu phần",
-    detail:
-      "Tăng thêm 0.5 kg cám tinh/con/ngày để đẩy nhanh tăng trọng, theo dõi trong 7 ngày.",
-    recorder: "Nguyễn Văn A",
-    status: "normal",
-  },
-  {
-    id: "16",
-    date: "2025-11-01",
-    time: "08:00",
-    animalTag: "HF-030",
-    animalName: "Bò cái HF 030",
-    group: "Đàn bò sữa A2",
-    farm: "Trại bò sữa A1",
-    logType: "environment",
-    title: "Kiểm tra hệ thống làm mát",
-    detail:
-      "Quạt chuồng hoạt động tốt, hệ thống phun sương hoạt động 80%, cần bảo dưỡng 2 đầu phun.",
-    recorder: "Trần Thị B",
-    status: "normal",
-  },
-  {
-    id: "17",
-    date: "2025-11-01",
-    time: "19:20",
-    animalTag: "HF-030",
-    animalName: "Bò cái HF 030",
-    group: "Đàn bò sữa A2",
-    farm: "Trại bò sữa A1",
-    logType: "health",
-    title: "Ghi nhận ho nhẹ",
-    detail:
-      "Thỉnh thoảng ho, không sốt, chưa khó thở. Theo dõi thêm, nếu tăng sẽ mời thú y.",
-    recorder: "Nguyễn Văn A",
-    status: "warning",
-  },
-  {
-    id: "18",
-    date: "2025-10-31",
-    time: "06:10",
-    animalTag: "HF-012",
-    animalName: "Bò cái HF 012",
-    group: "Đàn bò sữa A2",
-    farm: "Trại bò sữa A1",
-    logType: "feeding",
-    title: "Ăn tốt buổi sáng",
-    detail:
-      "Ăn sạch khẩu phần trong 30 phút, uống nước bình thường, phân khuôn đẹp.",
-    recorder: "Nguyễn Văn A",
-    status: "normal",
-  },
-  {
-    id: "19",
-    date: "2025-10-31",
-    time: "17:00",
-    animalTag: "HF-012",
-    animalName: "Bò cái HF 012",
-    group: "Đàn bò sữa A2",
-    farm: "Trại bò sữa A1",
-    logType: "production",
-    title: "Sản lượng sữa ngày",
-    detail:
-      "Tổng sản lượng ngày 27.5 lít, tăng 1 lít so với trung bình 7 ngày trước.",
-    recorder: "Trần Thị B",
-    status: "normal",
-  },
-  {
-    id: "20",
-    date: "2025-10-30",
-    time: "13:30",
-    animalTag: "HF-001",
-    animalName: "Bò cái HF 001",
-    group: "Đàn bò sữa A1",
-    farm: "Trại bò sữa A1",
-    logType: "movement",
-    title: "Cho vận động khu sân chơi",
-    detail:
-      "Thả đàn ra sân chơi 1.5 giờ, bò vận động tốt, không có dấu hiệu tập tễnh hay chấn thương.",
-    recorder: "Nguyễn Văn A",
-    status: "normal",
-  },
-  {
-    id: "21",
-    date: "2025-10-29",
-    time: "09:00",
-    animalTag: "HB-078",
-    animalName: "Bò cái hậu bị 078",
-    group: "Đàn bò hậu bị",
-    farm: "Trại giống B2",
-    logType: "health",
-    title: "Tiêm vaccine định kỳ",
-    detail:
-      "Tiêm vaccine Lở mồm long móng theo lịch, ghi sổ lô vaccine và hạn sử dụng đầy đủ.",
-    recorder: "Bác sĩ thú y Phạm Văn D",
-    status: "normal",
-  },
-  {
-    id: "22",
-    date: "2025-10-29",
-    time: "18:10",
-    animalTag: "MT-045",
-    animalName: "Bò thịt lai Sind 045",
-    group: "Đàn bò thịt B1",
-    farm: "Trại bò thịt C1",
-    logType: "health",
-    title: "Quan sát dáng đi",
-    detail:
-      "Bò bước hơi khập khiễng chân sau phải, chưa sưng. Ghi nhận để kiểm tra lại ngày hôm sau.",
-    recorder: "Nguyễn Văn A",
-    status: "warning",
-  },
-  {
-    id: "23",
-    date: "2025-10-28",
-    time: "07:20",
-    animalTag: "HF-001",
-    animalName: "Bò cái HF 001",
-    group: "Đàn bò sữa A1",
-    farm: "Trại bò sữa A1",
-    logType: "breeding",
-    title: "Khám thai sau phối 35 ngày",
-    detail:
-      "Siêu âm thấy túi thai, kết luận có thai. Ghi nhận ngày dự kiến sinh.",
-    recorder: "Bác sĩ thú y Phạm Văn D",
-    status: "normal",
-  },
-  {
-    id: "24",
-    date: "2025-10-27",
-    time: "16:45",
-    animalTag: "HF-030",
-    animalName: "Bò cái HF 030",
-    group: "Đàn bò sữa A2",
-    farm: "Trại bò sữa A1",
-    logType: "environment",
-    title: "Điều chỉnh mật độ chuồng",
-    detail:
-      "Giảm bớt 1 con trong ô chuồng, tăng diện tích nằm cho bò, giảm stress do chật chội.",
-    recorder: "Trần Thị B",
-    status: "normal",
-  },
-  {
-    id: "25",
-    date: "2025-10-27",
-    time: "20:30",
-    animalTag: "MT-045",
-    animalName: "Bò thịt lai Sind 045",
-    group: "Đàn bò thịt B1",
-    farm: "Trại bò thịt C1",
-    logType: "feeding",
-    title: "Bỏ ăn một phần",
-    detail:
-      "Chỉ ăn khoảng 70% khẩu phần chiều, uống nước bình thường. Ghi nhận để đối chiếu với tăng trọng kỳ sau.",
-    recorder: "Nguyễn Văn A",
-    status: "warning",
-  },
 ];
 
 // ================== UTILS ==================
 
-function renderHealthBadge(status: string | undefined) {
-  if (!status) {
-    return (
-      <Badge variant="outline" className="text-[10px]">
-        Chưa đánh giá
-      </Badge>
-    );
-  }
-
-  if (status === "tot") {
-    return (
-      <Badge className="bg-emerald-100 text-emerald-700 text-[10px]">
-        Sức khoẻ tốt
-      </Badge>
-    );
-  }
-  if (status === "can-theo-doi") {
-    return (
-      <Badge className="bg-amber-100 text-amber-700 text-[10px]">
-        Cần theo dõi
-      </Badge>
-    );
-  }
-  if (status === "can-xu-ly") {
-    return (
-      <Badge className="bg-red-100 text-red-700 text-[10px]">
-        Cần xử lý ngay
-      </Badge>
-    );
-  }
-
-  return (
-    <Badge variant="outline" className="text-[10px]">
-      {status}
-    </Badge>
-  );
+function formatDate(dateStr: string) {
+  if (!dateStr) return "-";
+  return new Date(dateStr).toLocaleDateString("vi-VN");
 }
 
-function MetricPill({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-[10px]">
-      <span className="text-muted-foreground">{label}:</span>
-      <span className="font-semibold text-foreground">{value}</span>
-    </div>
-  );
+function getStatusBadgeColor(status: LivestockLog["status"]) {
+  switch (status) {
+    case "normal":
+      return "bg-emerald-50 text-emerald-700 border-emerald-100";
+    case "warning":
+      return "bg-amber-50 text-amber-700 border-amber-100";
+    case "critical":
+      return "bg-red-50 text-red-700 border-red-100";
+    default:
+      return "bg-slate-50 text-slate-600 border-slate-100";
+  }
+}
+
+function getLogTypeLabel(t: LogType) {
+  switch (t) {
+    case "feeding":
+      return "Cho ăn & dinh dưỡng";
+    case "health":
+      return "Sức khỏe & điều trị";
+    case "breeding":
+      return "Phối giống & sinh sản";
+    case "environment":
+      return "Chuồng trại & môi trường";
+    case "other":
+      return "Khác";
+  }
+}
+
+function getLogTypeIcon(t: LogType) {
+  switch (t) {
+    case "feeding":
+      return <Wheat className="h-3.5 w-3.5 text-lime-600" />;
+    case "health":
+      return <Stethoscope className="h-3.5 w-3.5 text-rose-600" />;
+    case "breeding":
+      return <Droplets className="h-3.5 w-3.5 text-sky-600" />;
+    case "environment":
+      return <Sparkles className="h-3.5 w-3.5 text-amber-600" />;
+    case "other":
+      return <PawPrint className="h-3.5 w-3.5 text-slate-500" />;
+  }
 }
 
 // ================== PAGE COMPONENT ==================
@@ -529,6 +225,144 @@ export default function VisitLogsPage() {
       return true;
     });
   }, [tab, farmFilter, groupFilter, statusFilter, dateFrom, dateTo, search]);
+
+  const columns: ColumnDef<LivestockLog>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Chọn tất cả"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Chọn dòng"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 30,
+    },
+    {
+      accessorKey: "date",
+      header: "Ngày / giờ",
+      cell: ({ row }) => {
+        const d = row.original;
+        return (
+          <div className="flex flex-col">
+            <span className="text-xs font-medium">
+              {formatDate(d.date)} • {d.time}
+            </span>
+            <span className="text-[11px] text-muted-foreground">
+              Trại: {d.farm}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "animalTag",
+      header: "Đối tượng",
+      cell: ({ row }) => {
+        const d = row.original;
+        return (
+          <div className="flex items-start gap-2">
+            <div className="mt-[2px] flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50 text-[11px] font-semibold text-emerald-700">
+              <Beef className="h-4 w-4" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold">{d.animalName}</span>
+              <span className="text-[11px] text-muted-foreground">
+                Thẻ tai: {d.animalTag} • {d.group}
+              </span>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "logType",
+      header: "Loại nhật ký",
+      cell: ({ row }) => {
+        const d = row.original;
+        return (
+          <Badge
+            variant="outline"
+            className="flex items-center gap-1 border-emerald-100 bg-emerald-50 text-[10px] text-emerald-700"
+          >
+            {getLogTypeIcon(d.logType)}
+            {getLogTypeLabel(d.logType)}
+          </Badge>
+        );
+      },
+    },
+    {
+      accessorKey: "title",
+      header: "Nội dung chính",
+      cell: ({ row }) => {
+        const d = row.original;
+        return (
+          <div className="flex flex-col">
+            <span className="text-xs font-medium">{d.title}</span>
+            <span className="line-clamp-2 text-[11px] text-muted-foreground">
+              {d.detail}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "recorder",
+      header: "Người ghi nhận",
+      cell: ({ row }) => {
+        const d = row.original;
+        return (
+          <div className="flex flex-col">
+            <span className="text-xs font-medium">{d.recorder}</span>
+            <span className="text-[11px] text-muted-foreground">
+              Ghi nhận tại {formatDate(d.date)} {d.time}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "status",
+      header: "Trạng thái",
+      cell: ({ row }) => {
+        const d = row.original;
+        return (
+          <Badge
+            variant="outline"
+            className={`flex items-center gap-1 border ${getStatusBadgeColor(
+              d.status
+            )}`}
+          >
+            {d.status === "normal" && "Ổn định"}
+            {d.status === "warning" && (
+              <>
+                <AlertTriangle className="h-3 w-3" />
+                Cần theo dõi
+              </>
+            )}
+            {d.status === "critical" && (
+              <>
+                <AlertTriangle className="h-3 w-3" />
+                Nguy cấp
+              </>
+            )}
+          </Badge>
+        );
+      },
+    },
+  ];
 
   return (
     <div className="flex flex-col gap-4">

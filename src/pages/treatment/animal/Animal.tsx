@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/select";
 import { DataTable } from "@/components/data-table";
 import { ProtocolPickerDialog } from "./TreatmentProtocol";
+import { useNavigate } from "react-router";
 
 type Severity = "nhẹ" | "trung-binh" | "nang";
 type ProtocolStatus = "dang-ap-dung" | "de-xuat" | "tam-dung" | "luu-tru";
@@ -345,6 +346,7 @@ const protocolTemplate: TreatmentProtocol = {
 };
 
 export default function TreatmentAnimalPage() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [speciesFilter, setSpeciesFilter] = useState<"all" | string>("all");
   const [severityFilter, setSeverityFilter] = useState<"all" | Severity>("all");
@@ -490,7 +492,11 @@ export default function TreatmentAnimalPage() {
         </div>
         <div className="flex items-center gap-2">
           <ProtocolPickerDialog protocols={protocols} onSelect={() => {}} />
-          <Button size="sm" className="bg-primary! text-primary-foreground!">
+          <Button
+            size="sm"
+            className="bg-primary! text-primary-foreground!"
+            onClick={() => navigate("/main/treatment/animals/add")}
+          >
             <FilePlus2 className="mr-1 h-4 w-4" />
             Thêm phác đồ mới
           </Button>
