@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
+import VarietyCreateDialog from "./VarietyCreateDialog";
 
 // 👉 Đổi lại cho đúng đường dẫn DataTable của bạn
 
@@ -158,24 +159,6 @@ const columns: ColumnDef<Variety>[] = [
     ),
   },
   {
-    accessorKey: "growthCycle",
-    header: "Chu kỳ sinh trưởng",
-    cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground">
-        {row.original.growthCycle}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "harvestMethod",
-    header: "Hình thức thu hoạch",
-    cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground">
-        {row.original.harvestMethod}
-      </span>
-    ),
-  },
-  {
     accessorKey: "note",
     header: "Ghi chú",
     cell: ({ row }) => (
@@ -294,10 +277,7 @@ export default function PlantVarietyPage() {
             </p>
           </div>
         </div>
-        <Button size="sm" className="gap-1 bg-primary!">
-          <Plus className="h-4 w-4" />
-          Thêm giống mới
-        </Button>
+        <VarietyCreateDialog />
       </header>
 
       {/* FILTER BAR */}

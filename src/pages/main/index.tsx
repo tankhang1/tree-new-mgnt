@@ -84,6 +84,7 @@ export default function MainPage() {
     treatment: "Phát đồ điều trị",
     animals: "Động vật",
     plants: "Cây trồng",
+    "plant-variety": "Giống cây trồng",
   };
 
   // ✅ Lấy ra các phần của URL
