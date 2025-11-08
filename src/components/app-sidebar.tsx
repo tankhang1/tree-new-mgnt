@@ -11,6 +11,7 @@ import {
   Frame,
   PieChart,
   Map,
+  ShieldAlert,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -134,6 +135,18 @@ const data = {
       ],
     },
     {
+      title: "Phác đồ điều trị",
+      url: "treatment",
+      icon: ShieldAlert,
+      items: [
+        {
+          title: "Cây trồng",
+          url: "treatment/plants",
+        },
+        { title: "Động vật / Gia súc", url: "treatment/animals" },
+      ],
+    },
+    {
       title: "Hệ thống & Tích hợp",
       url: "system",
       icon: Command,
@@ -147,23 +160,7 @@ const data = {
       ],
     },
   ],
-  projects: [
-    {
-      name: "Chuỗi cung ứng vật tư đầu vào",
-      url: "/projects/input-supply",
-      icon: Frame,
-    },
-    {
-      name: "Chuỗi sản xuất & chăn nuôi hợp nhất",
-      url: "/projects/livestock-chain",
-      icon: PieChart,
-    },
-    {
-      name: "Chuỗi canh tác & chế biến nông sản",
-      url: "/projects/crop-chain",
-      icon: Map,
-    },
-  ],
+  projects: [],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -174,7 +171,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

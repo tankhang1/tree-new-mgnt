@@ -81,6 +81,8 @@ export default function MainPage() {
     "crop-chain": "Chuỗi canh tác & chế biến nông sản",
     add: "Thêm mới",
     schedule: "Kế hoạch",
+    treatment: "Phát đồ điều trị",
+    animals: "Động vật",
   };
 
   // ✅ Lấy ra các phần của URL

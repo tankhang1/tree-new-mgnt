@@ -29,7 +29,7 @@ import Mechanization from "./pages/production/Mechanization";
 import Farms from "./pages/livestock/Farms";
 
 // Crop
-import Fields from "./pages/crop/Fields";
+import Fields from "./pages/crop/fields/Fields";
 import FarmingLogs from "./pages/crop/FarmingLogs";
 import TechnicalPlans from "./pages/crop/TechnicalPlans";
 
@@ -58,6 +58,10 @@ import AddScheduleCarePlansPage from "./pages/livestock/care-plans/AddScheduleCa
 import HealthPage from "./pages/livestock/health/Health";
 import VisitLogsPage from "./pages/livestock/VisitLogs";
 import ReportPage from "./pages/livestock/report/Report";
+import AddFieldsPage from "./pages/crop/fields/AddFields";
+import FieldsDetailPage from "./pages/crop/fields/FieldsDetail";
+import MapReviewPage from "./pages/crop/fields/MapReview";
+import TreatmentAnimalPage from "./pages/treatment/animal/Animal";
 
 function App() {
   return (
@@ -122,9 +126,14 @@ function App() {
         />
         {/* Crop */}
         <Route path="crop/fields" element={<Fields />} />
+        <Route path="crop/fields/map" element={<MapReviewPage />} />
+        <Route path="crop/fields/detail" element={<FieldsDetailPage />} />
+        <Route path="crop/fields/add" element={<AddFieldsPage />} />
         <Route path="crop/farming-logs" element={<FarmingLogs />} />
         <Route path="crop/technical-plans" element={<TechnicalPlans />} />
-
+        {/**Treatment */}
+        <Route path="treatment/animals" element={<TreatmentAnimalPage />} />
+        <Route path="treatment/plants" element={<TechnicalPlans />} />
         {/* Integration */}
         <Route path="integration/erp-flow" element={<ErpFlow />} />
         <Route

@@ -17,6 +17,7 @@ interface DataTableRowActionsProps<TData> {
   onView?: (row: TData) => void;
   onEdit?: (row: TData) => void;
   onDelete?: (row: TData) => void;
+  more?: { label: string; onClick: (row: TData) => void }[];
 }
 
 export function DataTableRowActions<TData>({
@@ -24,6 +25,7 @@ export function DataTableRowActions<TData>({
   onView,
   onEdit,
   onDelete,
+  more,
 }: DataTableRowActionsProps<TData>) {
   const data = row.original;
 
@@ -42,6 +44,11 @@ export function DataTableRowActions<TData>({
         <DropdownMenuItem onClick={() => onEdit?.(data)}>
           Chỉnh sửa
         </DropdownMenuItem>
+        {more?.map((item) => (
+          <DropdownMenuItem onClick={() => item.onClick?.(data)}>
+            {item.label}
+          </DropdownMenuItem>
+        ))}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => onDelete?.(data)}
