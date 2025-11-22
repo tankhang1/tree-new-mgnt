@@ -5,6 +5,11 @@ export type Person = {
   email?: string;
   role: string;
   org?: string;
+  department: string;
+  gender: "male" | "female";
+  title: string;
+  level: string;
+  initials: string;
 };
 export const people: Person[] = [
   {
@@ -14,6 +19,11 @@ export const people: Person[] = [
     email: "nguyenvana@gmail.com",
     role: "Quản lý trang trại",
     org: "HTX Sầu riêng A1",
+    department: "Phòng Nông nghiệp",
+    gender: "male",
+    title: "Quản lí vùng trồng",
+    level: "Senior",
+    initials: "NA",
   },
   {
     id: "u2",
@@ -22,6 +32,11 @@ export const people: Person[] = [
     email: "tranthib@yahoo.com",
     role: "Kỹ sư nông nghiệp",
     org: "Công ty CP Giống cây trồng XYZ",
+    department: "Phòng Nông nghiệp",
+    gender: "male",
+    title: "Quản lí vùng trồng",
+    level: "Senior",
+    initials: "NA",
   },
   {
     id: "u3",
@@ -30,6 +45,11 @@ export const people: Person[] = [
     email: "levanc@farm.vn",
     role: "Chuyên viên tài chính",
     org: "Nông trại Cửu Long",
+    department: "Phòng Kỹ thuật",
+    gender: "female",
+    title: "Kỹ sư nông nghiệp",
+    level: "Mid",
+    initials: "TB",
   },
   {
     id: "u4",
@@ -37,5 +57,10 @@ export const people: Person[] = [
     phone: "0903344556",
     role: "Kỹ thuật viên tưới tiêu",
     org: "AgriCare",
+    department: "Phòng Giám sát chất lượng",
+    gender: "male",
+    title: "Chuyên viên QC",
+    level: "Junior",
+    initials: "LC",
   },
 ];

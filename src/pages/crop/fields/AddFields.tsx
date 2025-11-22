@@ -30,8 +30,14 @@ import {
 } from "@/components/ui/select";
 import OwnerSelectCard from "./OwnerSelectCard";
 import { useNavigate } from "react-router";
-
-type CropType = "corn" | "soybean";
+import { CROP_VARIETIES, type CropType } from "@/pages/data/crop-varietity";
+import { SEEDS, type SeedDistribution } from "@/pages/data/seeds";
+import {
+  CULTIVATION_METHODS,
+  type CultivationMethod,
+} from "@/pages/data/cultivation-methods";
+import { people } from "@/pages/data/employees";
+import { certificates } from "@/pages/data/certificates";
 
 type Area = {
   id: string;
@@ -48,6 +54,12 @@ type Plot = {
   plotCode: string;
   crop: CropType;
   variety: string;
+  varietySecond: string;
+  cultivationMethod: CultivationMethod;
+  seedDistribution: SeedDistribution;
+  seedId1: string;
+  seedId2?: string; // thêm
+  seedName: string;
   size: string;
   plantingDate: string;
   rowSpacing: string;
@@ -79,7 +91,8 @@ export default function AddFieldsPage() {
   const [regionNote, setRegionNote] = useState(
     "Vùng trọng điểm sản xuất bắp lai, có hệ thống kênh mương hiện hữu."
   );
-
+  const [certificateId, setCertificateId] = useState<string>("");
+  const [managerId, setManagerId] = useState<string>("");
   // Step 2 – Khu vực
   const [areas, setAreas] = useState<Area[]>([
     {
@@ -107,39 +120,54 @@ export default function AddFieldsPage() {
       areaName: "Khu vực 1 – Gần trục lộ chính",
       plotCode: "KV1-LO1",
       crop: "corn",
-      variety: "Bắp lai LVN10",
+      variety: "LVN10",
+      varietySecond: "",
+      cultivationMethod: "mono",
+      seedDistribution: "plot",
+      seedName: "",
       size: "3.000",
       plantingDate: "2025-10-01",
       rowSpacing: "70",
       plantSpacing: "25",
       irrigation: "Tưới tràn theo rãnh",
       note: "Áp dụng cơ giới hoá gieo hạt.",
+      seedId1: "seed-lvn10-01",
     },
     {
       id: createId(),
       areaName: "Khu vực 1 – Gần trục lộ chính",
       plotCode: "KV1-LO2",
       crop: "corn",
-      variety: "Bắp nếp lai MX2",
+      variety: "MX2",
+      varietySecond: "",
+      cultivationMethod: "mono",
+      seedDistribution: "plot",
+      seedName: "",
       size: "5.000",
       plantingDate: "2025-10-03",
       rowSpacing: "65",
       plantSpacing: "22",
       irrigation: "Tưới phun mưa",
       note: "",
+      seedId1: "seed-lvn10-01",
     },
     {
       id: createId(),
       areaName: "Khu vực 2 – Ven kênh",
       plotCode: "KV2-LO1",
       crop: "soybean",
-      variety: "Đậu nành giống DT84",
+      variety: "DT84",
+      varietySecond: "",
+      cultivationMethod: "mono",
+      seedDistribution: "plot",
+      seedName: "",
       size: "4.000",
       plantingDate: "2025-11-05",
       rowSpacing: "40",
       plantSpacing: "15",
       irrigation: "Tưới nhỏ giọt",
       note: "Gieo sau vụ bắp, phục hồi đất.",
+      seedId1: "seed-dt84-01",
     },
   ]);
 
@@ -176,6 +204,12 @@ export default function AddFieldsPage() {
         plotCode: "",
         crop: cropMain,
         variety: "",
+        varietySecond: "",
+        cultivationMethod: "mono",
+        seedDistribution: "plot",
+        seedId1: "",
+        seedId2: "",
+        seedName: "",
         size: "",
         plantingDate: "",
         rowSpacing: "",
@@ -188,14 +222,26 @@ export default function AddFieldsPage() {
 
   const handleChangePlot = (id: string, field: keyof Plot, value: string) => {
     setPlots((prev) =>
-      prev.map((p) =>
-        p.id === id
-          ? {
-              ...p,
-              [field]: field === "crop" ? (value as CropType) : value,
-            }
-          : p
-      )
+      prev.map((p) => {
+        if (p.id !== id) return p;
+
+        // Tạo object cập nhật
+        let updated: Plot = {
+          ...p,
+          [field]: field === "crop" ? (value as CropType) : value,
+        };
+
+        // Nếu đổi phương pháp canh tác → reset hạt giống
+        if (field === "cultivationMethod") {
+          const method = CULTIVATION_METHODS.find((m) => m.id === value);
+
+          if (method?.maxSeeds === 1) {
+            updated.seedId2 = ""; // clear hạt giống 2 nếu đơn canh
+          }
+        }
+
+        return updated;
+      })
     );
   };
 
@@ -261,6 +307,10 @@ export default function AddFieldsPage() {
           setTerrain={setTerrain}
           regionNote={regionNote}
           setRegionNote={setRegionNote}
+          certificateId={certificateId}
+          setCertificateId={setCertificateId}
+          managerId={managerId}
+          setManagerId={setManagerId}
         />
       )}
 
@@ -297,6 +347,8 @@ export default function AddFieldsPage() {
             regionArea,
             terrain,
             regionNote,
+            certificateId,
+            managerId,
           }}
           areas={areas}
           plots={plots}
@@ -399,6 +451,10 @@ function Step1Region(props: {
   setTerrain: (v: string) => void;
   regionNote: string;
   setRegionNote: (v: string) => void;
+  certificateId: string;
+  setCertificateId: (v: string) => void;
+  managerId: string;
+  setManagerId: (v: string) => void;
 }) {
   const {
     regionCode,
@@ -423,6 +479,10 @@ function Step1Region(props: {
     setTerrain,
     regionNote,
     setRegionNote,
+    certificateId,
+    setCertificateId,
+    managerId,
+    setManagerId,
   } = props;
 
   return (
@@ -604,6 +664,67 @@ function Step1Region(props: {
           </div>
 
           <OwnerSelectCard />
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground">
+                Giấy chứng nhận vùng trồng
+              </p>
+              <Select value={certificateId} onValueChange={setCertificateId}>
+                <SelectTrigger className="h-9 text-sm w-full">
+                  <SelectValue placeholder="Chọn giấy chứng nhận" />
+                </SelectTrigger>
+                <SelectContent>
+                  {certificates.map((cert) => (
+                    <SelectItem key={cert.id} value={cert.id}>
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-emerald-100 text-[10px] font-semibold text-emerald-700">
+                          {cert.code}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs font-medium">
+                            {cert.name}
+                          </span>
+                          <span className="text-[11px] text-muted-foreground">
+                            {cert.org} · {cert.crop}
+                          </span>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground">
+                Nhân viên quản lí vùng
+              </p>
+              <Select value={managerId} onValueChange={setManagerId}>
+                <SelectTrigger className="h-9 text-sm w-full">
+                  <SelectValue placeholder="Chọn nhân viên phụ trách" />
+                </SelectTrigger>
+                <SelectContent>
+                  {people.map((emp) => (
+                    <SelectItem key={emp.id} value={emp.id}>
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-sky-100 text-[11px] font-semibold text-sky-700">
+                          {emp.initials}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs font-medium">
+                            {emp.name}
+                          </span>
+                          <span className="text-[11px] text-muted-foreground">
+                            {emp.department} · {emp.title}
+                          </span>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -850,189 +971,389 @@ function Step3Plots(props: {
           Thông tin từng lô trong khu vực
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4 text-xs md:text-sm">
-        {plots.map((p, idx) => (
-          <div
-            key={p.id}
-            className="rounded-lg border bg-muted/10 p-3 shadow-sm"
-          >
-            <div className="mb-2 flex items-center justify-between gap-2">
-              <p className="text-xs font-semibold text-muted-foreground">
-                Lô {idx + 1}
-              </p>
-              <Button
-                type="button"
-                size="icon"
-                variant="ghost"
-                className="h-7 w-7 text-red-500 hover:text-red-600"
-                onClick={() => onRemovePlot(p.id)}
-                disabled={plots.length === 1}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
 
-            <div className="grid gap-3 md:grid-cols-3">
-              <div>
-                <p className="text-xs text-muted-foreground">Thuộc khu vực *</p>
-                <Select
-                  value={p.areaName}
-                  onValueChange={(v) => onChangePlot(p.id, "areaName", v)}
-                >
-                  <SelectTrigger className="h-9 w-full">
-                    <SelectValue placeholder="Chọn khu vực" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {areas.map((a) => (
-                      <SelectItem key={a.id} value={a.name}>
-                        {a.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Mã lô *</p>
-                <Input
-                  className="h-9"
-                  value={p.plotCode}
-                  onChange={(e) =>
-                    onChangePlot(p.id, "plotCode", e.target.value)
-                  }
-                  placeholder="VD: KV1-LO1"
-                />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">
-                  Loại cây & giống
+      <CardContent className="space-y-4 text-xs md:text-sm">
+        {plots.map((p, idx) => {
+          const methodConfig =
+            CULTIVATION_METHODS.find((m) => m.id === p.cultivationMethod) ??
+            CULTIVATION_METHODS[0];
+          const varietyOptions = CROP_VARIETIES[p.crop];
+          const seedOptions = SEEDS.filter((s) => s.crop === p.crop);
+
+          return (
+            <div
+              key={p.id}
+              className="rounded-lg border bg-muted/10 p-3 shadow-sm space-y-3"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-xs font-semibold text-muted-foreground">
+                  Lô {idx + 1}
                 </p>
-                <div className="grid grid-cols-[110px,1fr] gap-2">
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="ghost"
+                  className="h-7 w-7 text-red-500 hover:text-red-600"
+                  onClick={() => onRemovePlot(p.id)}
+                  disabled={plots.length === 1}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-3 border-t pt-3">
+                <div>
+                  <p className="text-xs text-muted-foreground">
+                    Thuộc khu vực *
+                  </p>
                   <Select
-                    value={p.crop}
-                    onValueChange={(v) => onChangePlot(p.id, "crop", v)}
+                    value={p.areaName}
+                    onValueChange={(v) => onChangePlot(p.id, "areaName", v)}
                   >
                     <SelectTrigger className="h-9 w-full">
-                      <SelectValue />
+                      <SelectValue placeholder="Chọn khu vực" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="corn">Bắp</SelectItem>
-                      <SelectItem value="soybean">Đậu nành</SelectItem>
+                      {areas.map((a) => (
+                        <SelectItem key={a.id} value={a.name}>
+                          {a.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Mã lô *</p>
                   <Input
                     className="h-9"
-                    value={p.variety}
+                    value={p.plotCode}
                     onChange={(e) =>
-                      onChangePlot(p.id, "variety", e.target.value)
+                      onChangePlot(p.id, "plotCode", e.target.value)
                     }
-                    placeholder="Giống LVN10, DT84..."
+                    placeholder="VD: KV1-LO1"
+                  />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">
+                    Diện tích lô (m²)
+                  </p>
+                  <Input
+                    className="h-9"
+                    value={p.size}
+                    onChange={(e) => onChangePlot(p.id, "size", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-[1.4fr,1.1fr] border-t pt-3">
+                <div className="space-y-2">
+                  <p className="text-xs text-muted-foreground">
+                    Cây trồng & giống
+                  </p>
+                  <div className="grid grid-cols-[130px,1fr] gap-2">
+                    <Select
+                      value={p.crop}
+                      onValueChange={(v) => onChangePlot(p.id, "crop", v)}
+                    >
+                      <SelectTrigger className="h-9 w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="corn">
+                          <div className="flex items-center gap-2">
+                            <img
+                              src="/images/crops/corn.png"
+                              alt="Bắp"
+                              className="h-5 w-5 rounded object-cover"
+                            />
+                            <span>Bắp</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="soybean">
+                          <div className="flex items-center gap-2">
+                            <img
+                              src="/images/crops/soybean.png"
+                              alt="Đậu nành"
+                              className="h-5 w-5 rounded object-cover"
+                            />
+                            <span>Đậu nành</span>
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <Select
+                      value={p.variety}
+                      onValueChange={(v) => onChangePlot(p.id, "variety", v)}
+                    >
+                      <SelectTrigger className="h-9 w-full">
+                        <SelectValue placeholder="Chọn giống chính" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {varietyOptions.map((v) => (
+                          <SelectItem key={v.id} value={v.id}>
+                            <div className="flex items-center gap-2">
+                              <img
+                                src={v.imageUrl}
+                                alt={v.name}
+                                className="h-5 w-5 rounded object-cover"
+                              />
+                              <span>{v.name}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {methodConfig.maxVarieties > 1 && (
+                    <div className="grid grid-cols-[130px,1fr] gap-2">
+                      <div className="text-[11px] text-muted-foreground pt-1">
+                        Giống phụ
+                      </div>
+                      <Select
+                        value={p.varietySecond}
+                        onValueChange={(v) =>
+                          onChangePlot(p.id, "varietySecond", v)
+                        }
+                      >
+                        <SelectTrigger className="h-9 w-full">
+                          <SelectValue placeholder="Chọn giống phụ / xen canh" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {varietyOptions.map((v) => (
+                            <SelectItem key={v.id} value={v.id}>
+                              <div className="flex items-center gap-2">
+                                <img
+                                  src={v.imageUrl}
+                                  alt={v.name}
+                                  className="h-5 w-5 rounded object-cover"
+                                />
+                                <span>{v.name}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-xs text-muted-foreground">
+                    Phương pháp canh tác
+                  </p>
+                  <Select
+                    value={p.cultivationMethod}
+                    onValueChange={(v) =>
+                      onChangePlot(p.id, "cultivationMethod", v)
+                    }
+                  >
+                    <SelectTrigger className="h-9 w-full">
+                      <SelectValue placeholder="Chọn phương pháp canh tác" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CULTIVATION_METHODS.map((m) => (
+                        <SelectItem key={m.id} value={m.id}>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-xs font-medium">
+                              {m.label}
+                            </span>
+                            <span className="text-[11px] text-muted-foreground">
+                              {m.description}
+                            </span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-[11px] text-muted-foreground">
+                    Tối đa {methodConfig.maxVarieties} giống trên lô tùy phương
+                    pháp.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-[1.2fr,1.3fr] border-t pt-3">
+                <div className="space-y-2">
+                  <p className="text-xs text-muted-foreground mb-1">
+                    Danh sách hạt giống
+                  </p>
+
+                  {/* Hạt giống 1 */}
+                  <Select
+                    value={p.seedId1}
+                    onValueChange={(v) => onChangePlot(p.id, "seedId1", v)}
+                  >
+                    <SelectTrigger className="h-9 w-full">
+                      <SelectValue placeholder="Chọn hạt giống 1" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {seedOptions.map((s) => (
+                        <SelectItem key={s.id} value={s.id}>
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={s.imageUrl}
+                              alt={s.name}
+                              className="h-5 w-5 rounded object-cover"
+                            />
+                            <span className="text-xs">{s.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {/* Hạt giống 2 nếu phương pháp cho phép */}
+                  {methodConfig.maxSeeds === 2 && (
+                    <Select
+                      value={p.seedId2}
+                      onValueChange={(v) => onChangePlot(p.id, "seedId2", v)}
+                    >
+                      <SelectTrigger className="h-9 w-full mt-2">
+                        <SelectValue placeholder="Chọn hạt giống 2" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {seedOptions.map((s) => (
+                          <SelectItem key={s.id} value={s.id}>
+                            <div className="flex items-center gap-2">
+                              <img
+                                src={s.imageUrl}
+                                alt={s.name}
+                                className="h-5 w-5 rounded object-cover"
+                              />
+                              <span className="text-xs">{s.name}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+
+                  <p className="text-[11px] text-muted-foreground">
+                    {methodConfig.maxSeeds === 1
+                      ? "Đơn canh: chỉ sử dụng 1 loại hạt giống."
+                      : "Xen canh / Luân canh: có thể sử dụng 2 loại hạt giống."}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">
+                    Cấu hình hạt giống
+                  </p>
+                  <Input
+                    className="h-9"
+                    value={p.seedName}
+                    onChange={(e) =>
+                      onChangePlot(p.id, "seedName", e.target.value)
+                    }
+                    placeholder={
+                      p.seedDistribution === "row"
+                        ? "VD: LVN10 hàng chẵn, MX2 hàng lẻ..."
+                        : "Mô tả phối trộn, tỉ lệ, lô hạt giống..."
+                    }
+                  />
+                  <p className="mt-1 text-[11px] text-muted-foreground">
+                    Mô tả chi tiết cách bố trí hạt giống trên lô.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-4 border-t pt-3">
+                <div>
+                  <p className="text-xs text-muted-foreground">
+                    Ngày gieo trồng
+                  </p>
+                  <Input
+                    type="date"
+                    className="h-9"
+                    value={p.plantingDate}
+                    onChange={(e) =>
+                      onChangePlot(p.id, "plantingDate", e.target.value)
+                    }
+                  />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">
+                    Khoảng cách hàng (cm)
+                  </p>
+                  <Input
+                    className="h-9"
+                    value={p.rowSpacing}
+                    onChange={(e) =>
+                      onChangePlot(p.id, "rowSpacing", e.target.value)
+                    }
+                  />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">
+                    Khoảng cách cây (cm)
+                  </p>
+                  <Input
+                    className="h-9"
+                    value={p.plantSpacing}
+                    onChange={(e) =>
+                      onChangePlot(p.id, "plantSpacing", e.target.value)
+                    }
+                  />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Đường bình độ</p>
+                  <Input
+                    className="h-9"
+                    value={p.size}
+                    onChange={(e) => onChangePlot(p.id, "size", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-2 border-t pt-3">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">
+                    Hình thức tưới
+                  </p>
+                  <Select
+                    value={p.irrigation}
+                    onValueChange={(v) => onChangePlot(p.id, "irrigation", v)}
+                  >
+                    <SelectTrigger className="h-9 w-full">
+                      <SelectValue placeholder="Chọn hình thức tưới" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="tuoi-tran">
+                        Tưới tràn theo rãnh
+                      </SelectItem>
+                      <SelectItem value="tuoi-phun">Tưới phun mưa</SelectItem>
+                      <SelectItem value="tuoi-nho-giot">
+                        Tưới nhỏ giọt
+                      </SelectItem>
+                      <SelectItem value="tuoi-tham">
+                        Tưới thấm (ngầm)
+                      </SelectItem>
+                      <SelectItem value="tuoi-thu-cong">
+                        Tưới thủ công
+                      </SelectItem>
+                      <SelectItem value="tuoi-tu-dong">
+                        Tưới tự động / cảm biến
+                      </SelectItem>
+                      <SelectItem value="khong-tuoi">
+                        Không tưới (chỉ dùng nước mưa)
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Ghi chú</p>
+                  <Input
+                    className="h-9"
+                    value={p.note}
+                    onChange={(e) => onChangePlot(p.id, "note", e.target.value)}
                   />
                 </div>
               </div>
             </div>
-
-            <div className="mt-2 grid gap-3 md:grid-cols-5">
-              <div>
-                <p className="text-xs text-muted-foreground">
-                  Diện tích lô (m²)
-                </p>
-                <Input
-                  className="h-9"
-                  value={p.size}
-                  onChange={(e) => onChangePlot(p.id, "size", e.target.value)}
-                />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Đường bình độ</p>
-                <Input
-                  className="h-9"
-                  value={p.size}
-                  onChange={(e) => onChangePlot(p.id, "size", e.target.value)}
-                />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Ngày gieo trồng</p>
-                <Input
-                  type="date"
-                  className="h-9"
-                  value={p.plantingDate}
-                  onChange={(e) =>
-                    onChangePlot(p.id, "plantingDate", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">
-                  Khoảng cách hàng (cm)
-                </p>
-                <Input
-                  className="h-9"
-                  value={p.rowSpacing}
-                  onChange={(e) =>
-                    onChangePlot(p.id, "rowSpacing", e.target.value)
-                  }
-                />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">
-                  Khoảng cách cây (cm)
-                </p>
-                <Input
-                  className="h-9"
-                  value={p.plantSpacing}
-                  onChange={(e) =>
-                    onChangePlot(p.id, "plantSpacing", e.target.value)
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="mt-2 grid gap-3 md:grid-cols-2">
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">
-                  Hình thức tưới
-                </p>
-                <Select
-                  value={p.irrigation}
-                  onValueChange={(v) => onChangePlot(p.id, "irrigation", v)}
-                >
-                  <SelectTrigger className="h-9 w-full">
-                    <SelectValue placeholder="Chọn hình thức tưới" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="tuoi-tran">
-                      Tưới tràn theo rãnh
-                    </SelectItem>
-                    <SelectItem value="tuoi-phun">Tưới phun mưa</SelectItem>
-                    <SelectItem value="tuoi-nho-giot">Tưới nhỏ giọt</SelectItem>
-                    <SelectItem value="tuoi-tham">Tưới thấm (ngầm)</SelectItem>
-                    <SelectItem value="tuoi-thu-cong">
-                      Tưới thủ công (xô, vòi...)
-                    </SelectItem>
-                    <SelectItem value="tuoi-tu-dong">
-                      Tưới tự động / cảm biến
-                    </SelectItem>
-                    <SelectItem value="khong-tuoi">
-                      Không tưới (chỉ dùng nước mưa)
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-[11px] text-muted-foreground mt-1">
-                  Lựa chọn hình thức tưới phù hợp giúp tính toán chi phí và năng
-                  suất cây trồng chính xác hơn.
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">Ghi chú</p>
-                <Input
-                  className="h-9"
-                  value={p.note}
-                  onChange={(e) => onChangePlot(p.id, "note", e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
 
         <Button
           type="button"
@@ -1064,12 +1385,15 @@ function Step4Review(props: {
     regionArea: string;
     terrain: string;
     regionNote: string;
+    certificateId: string;
+    managerId: string;
   };
   areas: Area[];
   plots: Plot[];
 }) {
   const { region, areas, plots } = props;
-
+  const certificate = certificates.find((c) => c.id === region.certificateId);
+  const manager = people.find((e) => e.id === region.managerId);
   return (
     <div className="space-y-4">
       <Card>
@@ -1112,6 +1436,20 @@ function Step4Review(props: {
               <span className="font-semibold">{region.owner}</span>
             </p>
           </div>
+          <p>
+            Giấy chứng nhận:&nbsp;
+            <span className="font-semibold">
+              {certificate ? `${certificate.name} (${certificate.code})` : "-"}
+            </span>
+          </p>
+          <p>
+            Nhân viên quản lí:&nbsp;
+            <span className="font-semibold">
+              {manager
+                ? `${manager.name} – ${manager.department} (${manager.title})`
+                : "-"}
+            </span>
+          </p>
           <div className="md:col-span-2 space-y-1">
             <p>Địa hình: {region.terrain || "-"}</p>
             <p>Ghi chú: {region.regionNote || "-"}</p>

@@ -87,6 +87,7 @@ export default function MainPage() {
     "plant-variety": "Giống cây trồng",
     seeds: "Hạt giống",
     map: "Bản đồ",
+    detail: "Chi tiết",
   };
 
   // ✅ Lấy ra các phần của URL
