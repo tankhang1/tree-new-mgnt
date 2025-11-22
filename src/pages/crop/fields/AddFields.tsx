@@ -38,6 +38,7 @@ import {
 } from "@/pages/data/cultivation-methods";
 import { people } from "@/pages/data/employees";
 import { certificates } from "@/pages/data/certificates";
+import { ConfirmMapDialog } from "./ConfirmDialog";
 
 type Area = {
   id: string;
@@ -74,6 +75,8 @@ function createId() {
 
 export default function AddFieldsPage() {
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const [openConfirm, setOpenConfirm] = useState(false);
+
   const navigate = useNavigate();
   // Step 1 – Vùng
   const [regionCode, setRegionCode] = useState("KV-CORN-01");
@@ -368,11 +371,26 @@ export default function AddFieldsPage() {
         <Button
           size="sm"
           className="bg-primary! text-primary-foreground!"
-          onClick={goNext}
+          onClick={() => {
+            if (step === 4) setOpenConfirm(true);
+            else goNext();
+          }}
         >
           {step === 4 ? "Hoàn thành" : "Tiếp theo"}
         </Button>
       </div>
+      <ConfirmMapDialog
+        open={openConfirm}
+        onOpenChange={setOpenConfirm}
+        onConfirm={() => {
+          setOpenConfirm(false);
+          navigate("/main/crop/fields/map"); // <-- đường dẫn đến trang bản đồ
+        }}
+        onSkip={() => {
+          setOpenConfirm(false);
+          navigate("/main/crop/fields");
+        }}
+      />
     </div>
   );
 }
@@ -677,9 +695,10 @@ function Step1Region(props: {
                   {certificates.map((cert) => (
                     <SelectItem key={cert.id} value={cert.id}>
                       <div className="flex items-center gap-2">
-                        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-emerald-100 text-[10px] font-semibold text-emerald-700">
-                          {cert.code}
-                        </div>
+                        <img
+                          src={cert.imageUrl}
+                          className="h-6 w-6 rounded object-cover"
+                        />
                         <div className="flex flex-col">
                           <span className="text-xs font-medium">
                             {cert.name}
@@ -707,9 +726,10 @@ function Step1Region(props: {
                   {people.map((emp) => (
                     <SelectItem key={emp.id} value={emp.id}>
                       <div className="flex items-center gap-2">
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-sky-100 text-[11px] font-semibold text-sky-700">
-                          {emp.initials}
-                        </div>
+                        <img
+                          src={emp.imageUrl}
+                          className="h-6 w-6 rounded object-cover"
+                        />
                         <div className="flex flex-col">
                           <span className="text-xs font-medium">
                             {emp.name}

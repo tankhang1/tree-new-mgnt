@@ -10,6 +10,7 @@ export type Person = {
   title: string;
   level: string;
   initials: string;
+  imageUrl: string;
 };
 export const people: Person[] = [
   {
@@ -24,6 +25,8 @@ export const people: Person[] = [
     title: "Quản lí vùng trồng",
     level: "Senior",
     initials: "NA",
+    imageUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3m972e8FEvBi7ETC03avlJcZDg8nT9dWLSw&s",
   },
   {
     id: "u2",
@@ -37,6 +40,8 @@ export const people: Person[] = [
     title: "Quản lí vùng trồng",
     level: "Senior",
     initials: "NA",
+    imageUrl:
+      "https://a.espncdn.com/combiner/i?img=/i/headshots/college-football/players/full/5152030.png&w=350&h=254",
   },
   {
     id: "u3",
@@ -50,6 +55,8 @@ export const people: Person[] = [
     title: "Kỹ sư nông nghiệp",
     level: "Mid",
     initials: "TB",
+    imageUrl:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCp_ByMCZW8m0s3KmAbIENDvR2Zc_HkBJyYw&s",
   },
   {
     id: "u4",
@@ -62,5 +69,6 @@ export const people: Person[] = [
     title: "Chuyên viên QC",
     level: "Junior",
     initials: "LC",
+    imageUrl: "https://cdn.nba.com/headshots/nba/latest/1040x760/445.png",
   },
 ];

@@ -557,80 +557,13 @@ export default function FieldsDetailPage() {
             </div>
 
             {/* CHI TIẾT LÔ ĐANG CHỌN */}
-            <div className="space-y-2 rounded-md border bg-muted/40 p-3 text-xs">
+            <div className="space-y-2 rounded-md text-xs">
               {selectedPlot ? (
-                <>
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <Wheat className="h-4 w-4 text-primary" />
-                      <div>
-                        <p className="text-sm font-semibold">
-                          {selectedPlot.name}
-                        </p>
-                        <p className="text-[11px] text-muted-foreground">
-                          Mã lô: {selectedPlot.code}
-                        </p>
-                      </div>
-                    </div>
-                    <CropBadge crop={selectedPlot.crop} large />
-                  </div>
-
-                  <div className="grid gap-2 md:grid-cols-2">
-                    <div className="space-y-1">
-                      <p>
-                        Diện tích:{" "}
-                        <span className="font-semibold">
-                          {selectedPlot.areaHa} ha
-                        </span>
-                      </p>
-                      <p>
-                        Loại đất:{" "}
-                        <span className="font-semibold">
-                          {selectedPlot.soilType}
-                        </span>
-                      </p>
-                      <p>
-                        Địa hình:{" "}
-                        <span className="font-semibold">
-                          {selectedPlot.topo}
-                        </span>
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <p>
-                        Hình thức tưới:{" "}
-                        <span className="font-semibold">
-                          {renderIrrigationLabel(selectedPlot.irrigation)}
-                        </span>
-                      </p>
-                      <p>
-                        Ngày gieo trồng:{" "}
-                        <span className="font-semibold">
-                          {selectedPlot.sowingDate
-                            ? new Date(
-                                selectedPlot.sowingDate
-                              ).toLocaleDateString("vi-VN")
-                            : "-"}
-                        </span>
-                      </p>
-                      <p>
-                        Trạng thái:{" "}
-                        <span className="font-semibold">
-                          {renderStatusLabel(selectedPlot.status)}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-
-                  {selectedPlot.note && (
-                    <div className="mt-2 rounded-md bg-card/70 p-2 text-[11px]">
-                      <p className="mb-1 font-semibold">Ghi chú canh tác</p>
-                      <p className="text-muted-foreground">
-                        {selectedPlot.note}
-                      </p>
-                    </div>
-                  )}
-                </>
+                <PlotDetailPanel
+                  plot={selectedPlot}
+                  area={selectedArea}
+                  region={selectedRegion}
+                />
               ) : (
                 <p className="text-xs text-muted-foreground">
                   Chọn một lô bên trái để xem chi tiết.
@@ -697,4 +630,168 @@ function renderStatusLabel(s: Plot["status"]): string {
     default:
       return s;
   }
+}
+function PlotDetailPanel({
+  plot,
+  area,
+  region,
+}: {
+  plot: Plot | null;
+  area: Area | null;
+  region: Region | null;
+}) {
+  if (!plot) {
+    return (
+      <div className="rounded-lg border bg-muted/30 p-4 text-xs">
+        <p className="text-muted-foreground">Chọn một lô để xem chi tiết.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-xl bg-white shadow-sm border p-5 space-y-5">
+      {/* HEADER */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-base font-semibold text-slate-800 flex items-center gap-2">
+            <Focus className="h-4 w-4 text-primary" />
+            {plot.name}
+          </h2>
+          <p className="text-[12px] text-slate-500 mt-1 flex items-center gap-1">
+            <MapPin className="h-3 w-3" />
+            <span className="font-medium">{plot.code}</span>
+            <span className="mx-1">•</span>
+            {region?.name} → {area?.name}
+          </p>
+        </div>
+
+        <CropBadge crop={plot.crop} large />
+      </div>
+
+      {/* CORE STATS */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <PlotStat
+          icon={<Leaf className="h-4 w-4 text-emerald-600" />}
+          label="Diện tích"
+          value={`${plot.areaHa} ha`}
+        />
+        <PlotStat
+          icon={<Droplets className="h-4 w-4 text-sky-600" />}
+          label="Tưới"
+          value={renderIrrigationLabel(plot.irrigation)}
+        />
+        <PlotStat
+          icon={<Wheat className="h-4 w-4 text-amber-600" />}
+          label="Gieo trồng"
+          value={
+            plot.sowingDate
+              ? new Date(plot.sowingDate).toLocaleDateString("vi-VN")
+              : "-"
+          }
+        />
+        <PlotStat
+          icon={<Sprout className="h-4 w-4 text-lime-600" />}
+          label="Trạng thái"
+          value={renderStatusLabel(plot.status)}
+        />
+      </div>
+
+      {/* GRID DETAIL */}
+      <div className="grid md:grid-cols-2 gap-4">
+        {/* Soil & Topo */}
+        <DetailCard
+          title="Điều kiện tự nhiên"
+          icon={<Mountain className="h-4 w-4 text-primary" />}
+          items={[
+            { label: "Loại đất", value: plot.soilType },
+            { label: "Địa hình", value: plot.topo },
+            //@ts-expect-error
+            area
+              ? {
+                  label: "Khu vực",
+                  value: `${area.soilType} • ${area.topo}`,
+                }
+              : null,
+          ]}
+        />
+
+        {/* Cultivation */}
+        <DetailCard
+          title="Thông tin canh tác"
+          icon={<Layers className="h-4 w-4 text-primary" />}
+          items={[
+            {
+              label: "Cây trồng chính",
+              value: plot.crop === "corn" ? "Bắp (Ngô)" : "Đậu nành",
+            },
+            { label: "Quy mô lô", value: `${plot.areaHa} ha` },
+            {
+              label: "Tưới tiêu",
+              value: renderIrrigationLabel(plot.irrigation),
+            },
+          ]}
+        />
+      </div>
+
+      {/* NOTE */}
+      {plot.note && (
+        <div className="rounded-lg bg-slate-900 text-slate-50 p-3">
+          <p className="text-xs font-semibold mb-1 flex items-center gap-1">
+            <Info className="h-3 w-3" />
+            Ghi chú canh tác
+          </p>
+          <p className="text-[12px] leading-relaxed">{plot.note}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PlotStat({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-lg border bg-slate-50 p-3">
+      <div className="flex items-center gap-2">
+        {icon}
+        <div>
+          <p className="text-[11px] text-slate-500">{label}</p>
+          <p className="text-sm font-semibold text-slate-800">{value}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DetailCard({
+  title,
+  icon,
+  items,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  items: { label: string; value: string }[];
+}) {
+  return (
+    <div className="rounded-xl border bg-white p-3 shadow-sm">
+      <p className="mb-2 flex items-center gap-2 text-xs font-semibold text-slate-700">
+        {icon}
+        {title}
+      </p>
+      <div className="space-y-1.5">
+        {items.filter(Boolean).map((i, idx) => (
+          <p key={idx} className="text-[12px]">
+            <span className="text-slate-500">{i.label}:</span>{" "}
+            <span className="font-medium text-slate-800">{i.value}</span>
+          </p>
+        ))}
+      </div>
+    </div>
+  );
 }

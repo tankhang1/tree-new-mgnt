@@ -62,8 +62,16 @@ type Plot = {
   centerLng: number;
   boundary: LatLngPoint[];
 };
-
-type EditLevel = "region" | "area" | "plot";
+type Row = {
+  id: string;
+  plotId: string;
+  code: string;
+  name: string;
+  centerLat: number;
+  centerLng: number;
+  boundary: LatLngPoint[];
+};
+type EditLevel = "region" | "area" | "plot" | "row";
 
 /* --------------------- SAMPLE HIERARCHY (chưa có boundary) --------------------- */
 
@@ -152,7 +160,26 @@ const initialPlots: Plot[] = [
     boundary: [],
   },
 ];
-
+const initialRows: Row[] = [
+  {
+    id: "row1",
+    plotId: "p1",
+    code: "R1",
+    name: "Hàng 1",
+    centerLat: 11.02155,
+    centerLng: 107.14756,
+    boundary: [],
+  },
+  {
+    id: "row2",
+    plotId: "p1",
+    code: "R2",
+    name: "Hàng 2",
+    centerLat: 11.02145,
+    centerLng: 107.14745,
+    boundary: [],
+  },
+];
 /* ----------------------------- LEAFLET ICON FIX ----------------------------- */
 
 const defaultIcon = L.icon({
@@ -209,9 +236,10 @@ export default function FieldCoordinateEditorPage() {
   const [regionId, setRegionId] = useState<string>("r1");
   const [areaId, setAreaId] = useState<string>("a1");
   const [plotId, setPlotId] = useState<string>("p1");
+  const [rows, setRows] = useState<Row[]>(initialRows);
+  const [rowId, setRowId] = useState<string>("row1");
 
   const [editLevel, setEditLevel] = useState<EditLevel>("plot");
-
   // auto sync khi đổi region / area
   useEffect(() => {
     const firstArea = areas.find((a) => a.regionId === regionId);
@@ -229,14 +257,17 @@ export default function FieldCoordinateEditorPage() {
     regionAreas.find((a) => a.id === areaId) ?? regionAreas[0];
   const areaPlots = plots.filter((p) => p.areaId === currentArea?.id);
   const currentPlot = areaPlots.find((p) => p.id === plotId) ?? areaPlots[0];
+  const plotRows = rows.filter((r) => r.plotId === currentPlot?.id);
+  const currentRow = plotRows.find((r) => r.id === rowId) ?? plotRows[0];
 
   // cấp đang chỉnh sửa
   const activePoints: LatLngPoint[] = useMemo(() => {
     if (editLevel === "region") return currentRegion.boundary;
     if (editLevel === "area") return currentArea?.boundary ?? [];
-    return currentPlot?.boundary ?? [];
-  }, [editLevel, currentRegion, currentArea, currentPlot]);
-
+    if (editLevel === "plot") return currentPlot?.boundary ?? [];
+    if (editLevel === "row") return currentRow?.boundary ?? [];
+    return [];
+  }, [editLevel, currentRegion, currentArea, currentPlot, currentRow]);
   const mapCenter = useMemo(() => {
     if (activePoints.length > 0) {
       const last = activePoints[activePoints.length - 1];
@@ -250,6 +281,9 @@ export default function FieldCoordinateEditorPage() {
     }
     if (currentPlot) {
       return { lat: currentPlot.centerLat, lng: currentPlot.centerLng };
+    }
+    if (editLevel === "row" && currentRow) {
+      return { lat: currentRow.centerLat, lng: currentRow.centerLng };
     }
     return { lat: currentRegion.centerLat, lng: currentRegion.centerLng };
   }, [activePoints, editLevel, currentRegion, currentArea, currentPlot]);
@@ -283,6 +317,14 @@ export default function FieldCoordinateEditorPage() {
             : p
         )
       );
+    } else if (editLevel === "row" && currentRow) {
+      setRows((prev) =>
+        prev.map((r) =>
+          r.id === currentRow.id
+            ? { ...r, boundary: [...r.boundary, point] }
+            : r
+        )
+      );
     }
   };
 
@@ -313,6 +355,14 @@ export default function FieldCoordinateEditorPage() {
             : p
         )
       );
+    } else if (editLevel === "row" && currentRow) {
+      setRows((prev) =>
+        prev.map((r) =>
+          r.id === currentRow.id
+            ? { ...r, boundary: r.boundary.slice(0, -1) }
+            : r
+        )
+      );
     }
   };
 
@@ -330,6 +380,10 @@ export default function FieldCoordinateEditorPage() {
     } else if (editLevel === "plot" && currentPlot) {
       setPlots((prev) =>
         prev.map((p) => (p.id === currentPlot.id ? { ...p, boundary: [] } : p))
+      );
+    } else if (editLevel === "row" && currentRow) {
+      setRows((prev) =>
+        prev.map((r) => (r.id === currentRow.id ? { ...r, boundary: [] } : r))
       );
     }
   };
@@ -480,6 +534,22 @@ export default function FieldCoordinateEditorPage() {
                 </SelectContent>
               </Select>
             </div>
+            {/*Hàng */}
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground">Hàng</p>
+              <Select value={currentRow?.id} onValueChange={(v) => setRowId(v)}>
+                <SelectTrigger className="h-9 w-full">
+                  <SelectValue placeholder="Chọn hàng" />
+                </SelectTrigger>
+                <SelectContent>
+                  {plotRows.map((r) => (
+                    <SelectItem key={r.id} value={r.id}>
+                      {r.code} – {r.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* CẤP ĐANG VẼ */}
@@ -510,6 +580,14 @@ export default function FieldCoordinateEditorPage() {
               onClick={() => setEditLevel("plot")}
             >
               Lô
+            </Button>
+            <Button
+              size="sm"
+              className={editLevel === "row" ? "bg-primary!" : ""}
+              variant={editLevel === "row" ? "default" : "outline"}
+              onClick={() => setEditLevel("row")}
+            >
+              Hàng
             </Button>
           </div>
         </CardContent>
@@ -624,6 +702,23 @@ export default function FieldCoordinateEditorPage() {
                     weight:
                       editLevel === "plot" && p.id === currentPlot?.id ? 3 : 1,
                     fillOpacity: 0.2,
+                  }}
+                />
+              ) : null
+            )}
+            {rows.map((r) =>
+              r.boundary.length ? (
+                <Polygon
+                  key={r.id}
+                  positions={pointsToLatLng(r.boundary)}
+                  pathOptions={{
+                    color:
+                      editLevel === "row" && r.id === currentRow?.id
+                        ? "#14b8a6"
+                        : "#a7f3d0",
+                    weight:
+                      editLevel === "row" && r.id === currentRow?.id ? 3 : 1,
+                    fillOpacity: 0.25,
                   }}
                 />
               ) : null
