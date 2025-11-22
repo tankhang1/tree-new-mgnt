@@ -102,6 +102,7 @@ const data = {
         { title: "Hạt giống", url: "crop/seeds" },
         { title: "Nhật ký canh tác", url: "crop/logs" },
         { title: "Báo cáo năng suất & chất lượng", url: "crop/reports" },
+        { title: "Bản đồ", url: "crop/map" },
       ],
     },
     {

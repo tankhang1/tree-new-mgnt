@@ -75,6 +75,7 @@ import SeasonGrowthPage from "./pages/season/growth/Growth";
 import AddGrowthPage from "./pages/season/growth/AddGrowth";
 import { SeasonCyclePage } from "./pages/season/cycle/Cycle";
 import AddCyclePage from "./pages/season/cycle/AddCycle";
+import MapPage from "./pages/crop/map/Map";
 
 function App() {
   return (
@@ -138,6 +139,7 @@ function App() {
           element={<AddScheduleCarePlansPage />}
         />
         {/* Crop */}
+        <Route path="crop/map" element={<MapPage />} />
         <Route path="crop/reports" element={<ReportsPage />} />
         <Route path="crop/fields" element={<Fields />} />
         <Route path="crop/fields/map" element={<MapReviewPage />} />
