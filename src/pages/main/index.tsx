@@ -90,6 +90,7 @@ export default function MainPage() {
     detail: "Chi tiết",
     area: "Khu vực",
     plot: "Lô",
+    history: "Lịch sử",
   };
 
   // ✅ Lấy ra các phần của URL
