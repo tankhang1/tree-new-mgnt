@@ -87,6 +87,9 @@ import EditRegionPage from "./pages/map/region/EditRegion";
 import AddAreaPage from "./pages/map/area/AddArea";
 import { AreaDetailPage } from "./pages/map/area/AreaDetail";
 import EditAreaPage from "./pages/map/area/EditArea";
+import AddPlotPage from "./pages/map/plot/AddPlot";
+import PlotDetailPage from "./pages/map/plot/PlotDetail";
+import EditPlotPage from "./pages/map/plot/EditPlot";
 
 function App() {
   return (
@@ -196,6 +199,9 @@ function App() {
         <Route path="map/area/add" element={<AddAreaPage />} />
         <Route path="map/area/edit" element={<EditAreaPage />} />
         <Route path="map/plot" element={<PlotPage />} />
+        <Route path="map/plot/add" element={<AddPlotPage />} />
+        <Route path="map/plot/detail" element={<PlotDetailPage />} />
+        <Route path="map/plot/edit" element={<EditPlotPage />} />
         <Route path="map/detail" element={<DetailPage />} />
         <Route path="map/history" element={<HistoryPage />} />
         {/* Default fallback */}

@@ -89,6 +89,7 @@ export default function MainPage() {
     map: "Bản đồ",
     detail: "Chi tiết",
     area: "Khu vực",
+    plot: "Lô",
   };
 
   // ✅ Lấy ra các phần của URL
