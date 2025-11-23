@@ -302,13 +302,7 @@ export default function AreaPage() {
         <DataTableRowActions
           row={row}
           onView={() => navigate(`/main/map/area/detail`)}
-          more={[
-            {
-              label: "Xem vùng trồng",
-              onClick: () =>
-                navigate(`/main/crop/fields/${row.original.regionName}`),
-            },
-          ]}
+          onEdit={() => navigate(`/main/map/area/edit`)}
         />
       ),
     },

@@ -88,6 +88,7 @@ export default function MainPage() {
     seeds: "Hạt giống",
     map: "Bản đồ",
     detail: "Chi tiết",
+    area: "Khu vực",
   };
 
   // ✅ Lấy ra các phần của URL
