@@ -91,6 +91,18 @@ const data = {
       ],
     },
     {
+      title: "Bản đồ vùng",
+      url: "map",
+      icon: Map,
+      items: [
+        { title: "Phân bổ vùng", url: "map/region" },
+        { title: "Phân bổ khu vực", url: "map/area" },
+        { title: "Phân bổ lô", url: "map/plot" },
+        { title: "Bản đồ", url: "map/detail" },
+        { title: "Lịch sử", url: "map/history" },
+      ],
+    },
+    {
       title: "Canh tác - Trồng trọt",
       url: "crop",
       icon: Map,

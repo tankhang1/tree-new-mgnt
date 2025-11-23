@@ -76,6 +76,16 @@ import AddGrowthPage from "./pages/season/growth/AddGrowth";
 import { SeasonCyclePage } from "./pages/season/cycle/Cycle";
 import AddCyclePage from "./pages/season/cycle/AddCycle";
 import MapPage from "./pages/crop/map/Map";
+import RegionPage from "./pages/map/region/Region";
+import AreaPage from "./pages/map/area/Area";
+import PlotPage from "./pages/map/plot/Plot";
+import DetailPage from "./pages/map/detail/Detail";
+import HistoryPage from "./pages/map/history/History";
+import AddRegionPage from "./pages/map/region/AddRegion";
+import RegionDetailPage from "./pages/map/region/RegionDetail";
+import EditRegionPage from "./pages/map/region/EditRegion";
+import AddAreaPage from "./pages/map/area/AddArea";
+import { AreaDetailPage } from "./pages/map/area/AreaDetail";
 
 function App() {
   return (
@@ -175,7 +185,17 @@ function App() {
         <Route path="season/growth" element={<SeasonGrowthPage />} />
         <Route path="season/cycle" element={<SeasonCyclePage />} />
         <Route path="season/cycle/add" element={<AddCyclePage />} />
-
+        {/*Map */}
+        <Route path="map/region" element={<RegionPage />} />
+        <Route path="map/region/add" element={<AddRegionPage />} />
+        <Route path="map/region/detail" element={<RegionDetailPage />} />
+        <Route path="map/region/edit" element={<EditRegionPage />} />
+        <Route path="map/area" element={<AreaPage />} />
+        <Route path="map/area/detail" element={<AreaDetailPage />} />
+        <Route path="map/area/add" element={<AddAreaPage />} />
+        <Route path="map/plot" element={<PlotPage />} />
+        <Route path="map/detail" element={<DetailPage />} />
+        <Route path="map/history" element={<HistoryPage />} />
         {/* Default fallback */}
         <Route
           path="*"
