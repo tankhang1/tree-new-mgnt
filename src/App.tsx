@@ -90,6 +90,11 @@ import EditAreaPage from "./pages/map/area/EditArea";
 import AddPlotPage from "./pages/map/plot/AddPlot";
 import PlotDetailPage from "./pages/map/plot/PlotDetail";
 import EditPlotPage from "./pages/map/plot/EditPlot";
+import FarmingRegionPage from "./pages/farming/region/Region";
+import FarmingSearchAreaPage from "./pages/farming/search-area";
+import FarmingSearchTreePage from "./pages/farming/search-tree";
+import FarmingTreeDistributionPage from "./pages/farming/tree-distribution";
+import AddFarmingRegionPage from "./pages/farming/region/AddRegion";
 
 function App() {
   return (
@@ -204,6 +209,15 @@ function App() {
         <Route path="map/plot/edit" element={<EditPlotPage />} />
         <Route path="map/detail" element={<DetailPage />} />
         <Route path="map/history" element={<HistoryPage />} />
+        {/*Farming */}
+        <Route path="farming/region" element={<FarmingRegionPage />} />
+        <Route path="farming/region/add" element={<AddFarmingRegionPage />} />
+        <Route
+          path="farming/tree-distribution"
+          element={<FarmingTreeDistributionPage />}
+        />
+        <Route path="farming/search-tree" element={<FarmingSearchTreePage />} />
+        <Route path="farming/search-area" element={<FarmingSearchAreaPage />} />
         {/* Default fallback */}
         <Route
           path="*"

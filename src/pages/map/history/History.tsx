@@ -161,7 +161,7 @@ export default function HistoryPage() {
     },
     {
       id: "actions",
-      header: "Tuỳ chọn",
+      header: "",
       enableSorting: false,
       enableHiding: false,
       cell: ({ row }) => (

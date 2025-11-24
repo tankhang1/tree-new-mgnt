@@ -103,6 +103,17 @@ const data = {
       ],
     },
     {
+      title: "Vùng canh tác",
+      url: "farming",
+      icon: Map,
+      items: [
+        { title: "Khu vực canh tác", url: "farming/region" },
+        { title: "Chi tiết phân bổ", url: "farming/tree-distribution" },
+        { title: "Tìm kiếm cây trồng", url: "farming/search-tree" },
+        { title: "Tìm kiếm vùng trồng", url: "farming/search-area" },
+      ],
+    },
+    {
       title: "Canh tác - Trồng trọt",
       url: "crop",
       icon: Map,
